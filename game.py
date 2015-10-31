@@ -1,4 +1,12 @@
+'''
+Time For 1 million game runs
+7.216486
+
+real    3m29.357s
+'''
+
 import random
+from player import Player
 
 events = {
     "single": 1,
@@ -32,42 +40,6 @@ def weighted_choice(choices):
         upto += v
     assert False, "weighted_choice: Shouldn't get here"
 
-
-class Player(object):
-    """
-    A player with the following attributes:
-
-    Attributes
-        attr: dictionary of attributes containing (key,value) of (event,probability) of the following:
-            single: float representing probability of hitting a single
-            double: "" double
-            triple: "" triple
-            home_run: "" home run
-            walk: "" walk
-            strikeout: "" strikeout
-            bbo: "" batted ball out
-    """
-
-    def __init__(self, single=.15, double=.075, triple=.025, home_run=.05,
-                 walk=.05, strikeout=.2, bbo=.45):
-        """
-        Return a Player object with attributes specified
-        if no attributes specified, returns a game starting from the first inning
-        """
-
-        self.attr = {}
-        self.attr["single"] = single
-        self.attr["double"] = double
-        self.attr["triple"] = triple
-        self.attr["home_run"] = home_run
-        self.attr["walk"] = walk
-        self.attr["strikeout"] = strikeout
-        self.attr["bbo"] = bbo
-
-    def get_attr(self):
-        return self.attr
-
-
 class Game(object):
     """
     A 9-inning baseball game for the hitting team with the following properties:
@@ -75,9 +47,10 @@ class Game(object):
     Attributes
         inning: integer tracking current inning (1-9)
         outs: integer tracking number of outs in current inning
-        runners: dictionary of base, integer pairs corresponding to runners on base in current inning 
+        runners: dictionary of base, integer pairs corresponding to runners on base in current inning
             i.e. {1:1, 2:0, 3:0} means runner on first
         score: integer tracking number of runs scored in game
+        hits: integer tracking number of hits
         complete: boolean True if game complete, False otherwise
         lineup: list (representing a queue) of Player objects in lineup order
     """
@@ -86,7 +59,8 @@ class Game(object):
     lineup_size = 9
 
     def __init__(self, inning=1, outs=0, runners={1: 0, 2: 0, 3: 0},
-                 score=0, complete=False, lineup=([Player()]*lineup_size)):
+                 score=0, hits=0, complete=False,
+                 lineup=([Player()]*lineup_size)):
         """
         Return a Game object with attributes specified
         If no attributes specified, returns a game starting from the first inning
@@ -95,6 +69,7 @@ class Game(object):
         self.outs = outs
         self.runners = runners
         self.score = score
+        self.hits = hits
         self.complete = complete
         self.lineup = lineup
 
@@ -162,6 +137,7 @@ class Game(object):
 
         # Hitter now on first
         r[1] = 1
+        self.hits += 1
 
     def double(self):
         r = self.runners
@@ -183,6 +159,7 @@ class Game(object):
 
         # Hitter now on second
         r[2] = 1
+        self.hits += 1
 
     def triple(self):
         r = self.runners
@@ -195,6 +172,7 @@ class Game(object):
 
         # Hitter now on third
         r[3] = 1
+        self.hits += 1
 
     def home_run(self):
         r = self.runners
@@ -207,6 +185,7 @@ class Game(object):
 
         # Hitter scores too and bases cleared
         self.score += 1
+        self.hits += 1
 
     def walk(self):
         # For now, treat as equivalent to single
@@ -222,10 +201,15 @@ class Game(object):
 
 
 def main():
-    g = Game()
+    num_sim = 100
+    total_score = 0
     # print g.runners
-    g.play_ball()
-    print g.score
+    for _ in range(num_sim):
+        g = Game()
+        g.play_ball()
+        total_score += g.score
+
+    print total_score/float(num_sim)
 
 if __name__ == "__main__":
     main()
