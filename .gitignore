@@ -39,3 +39,4 @@ Thumbs.db
 # Custom files #
 ################
 *.pyc
+*.csv
