@@ -75,7 +75,8 @@ class Game(object):
     Attributes
         inning: integer tracking current inning (1-9)
         outs: integer tracking number of outs in current inning
-        runners: list of (0,1) integers corresponding to runners on base in current inning [first, second, third]
+        runners: dictionary of base, integer pairs corresponding to runners on base in current inning 
+            i.e. {1:1, 2:0, 3:0} means runner on first
         score: integer tracking number of runs scored in game
         complete: boolean True if game complete, False otherwise
         lineup: list (representing a queue) of Player objects in lineup order
@@ -84,8 +85,8 @@ class Game(object):
     max_outs = 3
     lineup_size = 9
 
-    def __init__(self, inning=1, outs=0, runners=[0, 0, 0], score=0,
-                 complete=False, lineup=([Player()]*lineup_size)):
+    def __init__(self, inning=1, outs=0, runners={1: 0, 2: 0, 3: 0},
+                 score=0, complete=False, lineup=([Player()]*lineup_size)):
         """
         Return a Game object with attributes specified
         If no attributes specified, returns a game starting from the first inning
@@ -118,7 +119,7 @@ class Game(object):
 
         self.inning += 1
         self.outs = 0
-        self.runners = [0, 0, 0]
+        self.runners = {1: 0, 2: 0, 3: 0}
 
     def event_handler(self, event):
         """
@@ -136,31 +137,95 @@ class Game(object):
             self.walk()
         elif event == "strikeout":
             self.strikeout()
-        elif evenet == "bbo":
+        elif event == "bbo":
             self.bbo()
         else:
-            assert "handle_event: unknown event given"
+            assert False, "handle_event: unknown event given"
 
     def single(self):
+        r = self.runners
+
+        # Runner on third scores
+        if r[3]:
+            r[3] = 0
+            self.score += 1
+
+        # Runner on second makes it to third
+        if r[2]:
+            r[2] = 0
+            r[3] = 1
+
+        # Runner on first makes it to second
+        if r[1]:
+            r[1] = 0
+            r[2] = 1
+
+        # Hitter now on first
+        r[1] = 1
+
+    def double(self):
+        r = self.runners
+
+        # Runner on third scores
+        if r[3]:
+            r[3] = 0
+            self.score += 1
+
+        # Runner on second scores
+        if r[2]:
+            r[2] = 0
+            self.score += 1
+
+        # Runner on first makes it to third
+        if r[1]:
+            r[1] = 0
+            r[3] = 1
+
+        # Hitter now on second
+        r[2] = 1
+
+    def triple(self):
+        r = self.runners
+
+        # All runners score
+        for key in r:
+            if r[key]:
+                r[key] = 0
+                self.score += 1
+
+        # Hitter now on third
+        r[3] = 1
+
+    def home_run(self):
+        r = self.runners
+
+        # All runners score
+        for key in r:
+            if r[key]:
+                r[key] = 0
+                self.score += 1
+
+        # Hitter scores too and bases cleared
+        self.score += 1
+
+    def walk(self):
+        # For now, treat as equivalent to single
+        self.single()
+
+    def strikeout(self):
+        # Hitter out, increment outs
+        self.outs += 1
+
+    def bbo(self):
+        # Hitter out, increment outs
+        self.outs += 1
 
 
-    def set_balance(self, balance=0.0):
-        """Set the customer's starting balance."""
-        self.balance = balance
+def main():
+    g = Game()
+    # print g.runners
+    g.play_ball()
+    print g.score
 
-    def withdraw(self, amount):
-        """Return the balance remaining after withdrawing *amount*
-        dollars."""
-        if amount > self.balance:
-            raise RuntimeError('Amount greater than available balance.')
-        self.balance -= amount
-        return self.balance
-
-    def deposit(self, amount):
-        """Return the balance remaining after depositing *amount*
-        dollars."""
-        self.balance += amount
-        return self.balance
-
-
-
+if __name__ == "__main__":
+    main()
