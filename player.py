@@ -35,5 +35,8 @@ class Player(object):
 
         #intialize staistics
 
+    def __str__(self):
+        return self.name
+
     def get_attr(self):
         return self.attr
