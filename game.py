@@ -7,6 +7,7 @@ real    3m29.357s
 
 import random
 from player import Player
+import csv
 
 events = {
     "single": 1,
@@ -232,9 +233,17 @@ class Game(object):
 
 
 def main():
+    csvfile = open('bos_2004_ws_g2.csv', 'rU')
+    reader = csv.reader(csvfile)
+    column_names = next(reader)
+    print dict(enumerate(column_names))
+    for row in reader:
+        print row
+    # print players
+    return
     num_sim = 1
     total_score = 0
-    # print g.runners
+
     for _ in range(num_sim):
         g = Game(live_update=True)
         g.play_ball()
