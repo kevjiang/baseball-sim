@@ -235,7 +235,6 @@ class Game(object):
         self.total_hits += 1
 
     def walk(self, player):
-
         r = self.runners
 
         # If runner on 1,2,3, runner on third scores

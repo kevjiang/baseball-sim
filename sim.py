@@ -39,14 +39,11 @@ def main():
     for elem in lineup:
         print str(elem)
 
-    # return
-    # print players
-    # return
-    num_sim = 1000
+    num_sim = 1
     total_score = 0
 
     for _ in range(num_sim):
-        g = Game(live_update=False, lineup=lineup)
+        g = Game(live_update=True, lineup=lineup)
         g.play_ball()
         total_score += g.score
 

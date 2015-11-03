@@ -2,7 +2,7 @@ class Attr(object):
     """
     A collection of player attributes with the following properties:
 
-    Attr dictionary:
+    attr dictionary:
         single: float representing probability of hitting a single
         double: "" double
         triple: "" triple
