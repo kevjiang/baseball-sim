@@ -2,7 +2,7 @@ class Attr(object):
     """
     A collection of player attributes with the following properties:
 
-    Attributes:
+    Attr dictionary:
         single: float representing probability of hitting a single
         double: "" double
         triple: "" triple
@@ -35,14 +35,14 @@ class Stats(object):
     """
     A collection of player statistics with the following properties:
 
-    STATS:
+    stats dictionary:
         G:
         AB:
         PA:
         H:
-        B1: 1B
-        B2: 2B
-        B3: 3B
+        _1B: 1B
+        _2B: 2B
+        _3B: 3B
         HR:
         R:
         RBI:
@@ -53,23 +53,26 @@ class Stats(object):
 
     def __init__(self, G=0, AB=0, PA=0, H=0, _1B=0, _2B=0, _3B=0, HR=0, R=0, RBI=0,
                  BB=0, IBB=0, SO=0, AVG=0.0):
-        self.STATS = {}
-        self.STATS["G"] = G
-        self.STATS["AB"] = AB
-        self.STATS["PA"] = PA
-        self.STATS["H"] = H
-        self.STATS["1B"] = _1B
-        self.STATS["2B"] = _2B
-        self.STATS["3B"] = _3B
-        self.STATS["HR"] = HR
-        self.STATS["R"] = R
-        self.STATS["RBI"] = RBI
-        self.STATS["BB"] = BB
-        self.STATS["SO"] = SO
-        self.STATS["AVG"] = AVG
+        """
+        Return a Stats object with specified probabilities
+        """
+        self.stats = {}
+        self.stats["G"] = G
+        self.stats["AB"] = AB
+        self.stats["PA"] = PA
+        self.stats["H"] = H
+        self.stats["1B"] = _1B
+        self.stats["2B"] = _2B
+        self.stats["3B"] = _3B
+        self.stats["HR"] = HR
+        self.stats["R"] = R
+        self.stats["RBI"] = RBI
+        self.stats["BB"] = BB
+        self.stats["SO"] = SO
+        self.stats["AVG"] = AVG
 
     def get_stats_dic(self):
-        return self.STATS.get_stats_dic
+        return self.stats.get_stats_dic
 
 
 class Player(object):
@@ -82,7 +85,7 @@ class Player(object):
         name: player name
     """
 
-    def __init__(self, name="Jon Dowd", attr=Attr(), STATS=Stats()):
+    def __init__(self, name="Jon Dowd", attr=Attr(), stats=Stats()):
         """
         Return a Player object with attributes specified
         """
@@ -91,7 +94,7 @@ class Player(object):
         self.attr = attr
 
         #statistics
-        self.STATS = STATS
+        self.stats = stats
 
         #initialize personal info
         self.name = name
