@@ -6,7 +6,7 @@ real    3m29.357s
 '''
 
 import random
-from player import Player
+from player import Player, Stats, Attr
 import csv
 
 events = {
@@ -46,7 +46,7 @@ class Game(object):
     """
     A 9-inning baseball game for the hitting team with the following properties:
 
-    Attributes
+    Properties
         inning: integer tracking current inning (1-9)
         outs: integer tracking number of outs in current inning
         runners: dictionary of base, Player() pairs corresponding to runners on base in current inning
@@ -93,7 +93,7 @@ class Game(object):
             current_hitter = self.lineup.pop(0)
             self.lineup.append(current_hitter)
 
-            event = weighted_choice(current_hitter.get_attr())
+            event = weighted_choice(current_hitter.get_attr_obj().get_attr_dic())
             self.event_handler(event, current_hitter)
 
             if self.live_update:
@@ -231,21 +231,49 @@ class Game(object):
             ", 2: " + str(self.runners[2]) + \
             ", 3: " + str(self.runners[3])
 
-
-def main():
-    csvfile = open('bos_2004_ws_g2.csv', 'rU')
+#  converts fangraphs csv file to a list of all players in file and returns lineup
+def csv_to_lineup(filename):
+    csvfile = open(filename, 'rU')
     reader = csv.reader(csvfile)
     column_names = next(reader)
-    print dict(enumerate(column_names))
-    for row in reader:
-        print row
+    attr_dic_list = []
+
+    for attr_list in reader:  # append player stats to list
+        attr_dic = {}
+        for i in range(len(attr_list)):
+            value = attr_list[i]
+            key = column_names[i]
+            if key != 'Name':  # two special cases: Name and AVG
+                if key != 'AVG':
+                    value = int(attr_list[i])
+                else:
+                    value = float(attr_list[i])
+            attr_dic[key] = value
+        attr_dic_list.append(attr_dic)
+
+    lineup = []
+    for a in attr_dic_list:  # add player objects to lineup
+        lineup.append(Player(
+                      name=a['Name'],
+                      attr=Attr(single=a['1B'], double=a['2B'], triple=a['3B'],
+                                home_run=a['HR'], walk=a['BB'], strikeout=a['SO'], bbo=a['PA']-a['H']),
+                      STATS=Stats()))
+    return lineup
+
+
+def main():
+    lineup = csv_to_lineup('bos_2004_ws_g2.csv')
+    for elem in lineup:
+        print str(elem)
+
+    # return
     # print players
-    return
+    # return
     num_sim = 1
     total_score = 0
 
     for _ in range(num_sim):
-        g = Game(live_update=True)
+        g = Game(live_update=True, lineup=lineup)
         g.play_ball()
         total_score += g.score
 
