@@ -28,7 +28,8 @@ def csv_to_lineup(filename):
         lineup.append(Player(
                       name=a['Name'],
                       attr=Attr(single=a['1B'], double=a['2B'], triple=a['3B'],
-                                home_run=a['HR'], walk=a['BB'], strikeout=a['SO'], bbo=a['PA']-a['H']),
+                                home_run=a['HR'], walk=a['BB']+a['IBB']+a['HBP'],
+                                strikeout=a['SO'], bbo=a['AB']-a['H']),
                       stats=Stats()))
     return lineup
 
@@ -41,11 +42,11 @@ def main():
     # return
     # print players
     # return
-    num_sim = 1
+    num_sim = 1000
     total_score = 0
 
     for _ in range(num_sim):
-        g = Game(live_update=True, lineup=lineup)
+        g = Game(live_update=False, lineup=lineup)
         g.play_ball()
         total_score += g.score
 

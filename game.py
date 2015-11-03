@@ -6,8 +6,7 @@ real    3m29.357s
 '''
 
 import random
-from player import Player, Stats, Attr
-import csv
+from player import Player
 
 events = {
     "single": 1,
@@ -127,20 +126,47 @@ class Game(object):
     def single(self, player):
         r = self.runners
 
-        # Runner on third scores
+        # Runner on third scores (99% certain Levitt 1999)
         if r[3]:
             r[3] = None
             self.score += 1
 
-        # Runner on second moves to third
+        # Runner on second
         if r[2]:
-            r[3] = r[2]
-            r[2] = None
+            prob_dic = {"2-2": 12, "2-3": 299, "2-h": 653, "2-x": 36}
+            event = weighted_choice(prob_dic)
+            if event == "2-2":
+                r[2] = r[2]
+            elif event == "2-3":
+                r[3] = r[2]
+                r[2] = None
+            elif event == "2-h":
+                r[2] = None
+                self.score += 1
+            elif event == "2-x":
+                r[2] = None
+                self.outs += 1
+            else:
+                assert False, "single: Shouldn't get here"
 
-        # Runner on first moves to second
+        # Runner on first
         if r[1]:
-            r[2] = r[1]
-            r[1] = None
+            prob_dic = {"1-2": 652, "1-3": 313, "1-h": 14, "1-x": 21}
+            event = weighted_choice(prob_dic)
+            if event == "1-2":
+                r[2] = r[1]
+                r[1] = None
+            elif event == "1-3":
+                r[3] = r[1]
+                r[1] = None
+            elif event == "1-h":
+                r[1] = None
+                self.score += 1
+            elif event == "1-x":
+                r[1] = None
+                self.outs += 1
+            else:
+                assert False, "single: Shouldn't get here"
 
         # Hitter now on first
         r[1] = player
@@ -154,15 +180,29 @@ class Game(object):
             r[3] = None
             self.score += 1
 
-        # Runner on second scores
+        # Runner on second scores (98.4% certain Levitt 1999)
         if r[2]:
             r[2] = None
             self.score += 1
 
-        # Runner on first moves to third
+        # Runner on first has three possible outcomes based on Levitt (1999)
+        # 1) 1-3 536
+        # 2) 1-h 433
+        # 4) 1-x 31
         if r[1]:
-            r[3] = r[1]
-            r[1] = None
+            prob_dic = {"1-3": 536, "1-h": 433, "1-x": 31}
+            event = weighted_choice(prob_dic)
+            if event == "1-3":
+                r[3] = r[1]
+                r[1] = None
+            elif event == "1-h":
+                r[1] = None
+                self.score += 1
+            elif event == "1-x":
+                r[1] = None
+                self.outs += 1
+            else:
+                assert False, "double: Shouldn't get here"
 
         # Hitter now on second
         r[2] = player
@@ -208,7 +248,7 @@ class Game(object):
             r[3] = r[2]
             r[2] = None
 
-        # Runner on first moves to second
+        # If runner on 1, moves to second
         if r[1]:
             r[2] = r[1]
             r[1] = None

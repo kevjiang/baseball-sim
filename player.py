@@ -52,7 +52,7 @@ class Stats(object):
     """
 
     def __init__(self, G=0, AB=0, PA=0, H=0, _1B=0, _2B=0, _3B=0, HR=0, R=0, RBI=0,
-                 BB=0, IBB=0, SO=0, AVG=0.0):
+                 BB=0, SO=0, AVG=0.0):
         """
         Return a Stats object with specified probabilities
         """
@@ -67,7 +67,7 @@ class Stats(object):
         self.stats["HR"] = HR
         self.stats["R"] = R
         self.stats["RBI"] = RBI
-        self.stats["BB"] = BB
+        self.stats["BB"] = BB  # (but is really BB+IBB+HBP)
         self.stats["SO"] = SO
         self.stats["AVG"] = AVG
 
@@ -103,7 +103,7 @@ class Player(object):
         return self.name
 
     def get_stats_obj(self):
-        return self.STATS
+        return self.stats
 
     def get_attr_obj(self):
         return self.attr
