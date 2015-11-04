@@ -74,7 +74,7 @@ class Game(object):
         self.score = score
         self.total_hits = total_hits
         self.complete = complete
-        self.lineup = lineup
+        self.lineup = lineup[:]
         self.live_update = live_update
 
         self._original_lineup = lineup[:]  # keeps original lineup order for reference even as lineup is altered throughout Game

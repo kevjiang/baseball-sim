@@ -39,7 +39,7 @@ def main():
     for elem in lineup:
         print str(elem)
 
-    num_sim = 1
+    num_sim = 162
     total_score = 0
 
     for _ in range(num_sim):

@@ -90,7 +90,7 @@ class Stats(object):
         self.recalculate_avg()
         return self.stats[key]
 
-    # recalculates stored average
+    # recalculates stored average rounded to 3 decimal places
     def recalculate_avg(self):
         if self.stats["AB"] != 0:
             self.stats["AVG"] = round(self.stats["H"] / float(self.stats["AB"]), 3)
@@ -113,13 +113,13 @@ class Player(object):
         Return a Player object with attributes specified
         """
 
-        #attributes
+        # attributes
         self.attr = attr
 
-        #statistics
+        # statistics
         self.stats = stats
 
-        #initialize personal info
+        # initialize personal info
         self.name = name
 
     def __str__(self):
