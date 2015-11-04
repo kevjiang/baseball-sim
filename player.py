@@ -74,6 +74,20 @@ class Stats(object):
     def get_stats_dic(self):
         return self.stats.get_stats_dic
 
+    # set stats dic at key to value
+    # returns final value stored
+    def set_stats_dic(self, key, value):
+        self.stats[key] = value
+        return self.stats[key]
+
+    # increment stats dic at key by incr
+    # returns final value stored
+    def incr_stats_dic(self, key, incr):
+        self.stats[key] += incr
+        return self.stats[key]
+
+    #need a function to reset all stats to 0
+
 
 class Player(object):
     """
@@ -107,3 +121,13 @@ class Player(object):
 
     def get_attr_obj(self):
         return self.attr
+
+    # sets stat object at key to value
+    # returns final value stored
+    def set_stats_obj(self, key, value):
+        return self.stats.set_stats_dic(key, value)
+
+    # increments stat object at key by incr
+    # returns final value stored
+    def incr_stats_obj(self, key, incr):
+        return self.stats.incr_stats_dic(key, incr)
