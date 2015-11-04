@@ -69,22 +69,31 @@ class Stats(object):
         self.stats["RBI"] = RBI
         self.stats["BB"] = BB  # (but is really BB+IBB+HBP)
         self.stats["SO"] = SO
-        self.stats["AVG"] = AVG
+        self.stats["AVG"] = AVG  # will only be recalculated through recalculate_avg function internally
 
     def get_stats_dic(self):
-        return self.stats.get_stats_dic
+        return self.stats
 
     # set stats dic at key to value
     # returns final value stored
+    # note will always recalculate AVG based on new information
     def set_stats_dic(self, key, value):
         self.stats[key] = value
+        self.recalculate_avg()
         return self.stats[key]
 
     # increment stats dic at key by incr
     # returns final value stored
+    # note will always recalculate AVG based on new information
     def incr_stats_dic(self, key, incr):
         self.stats[key] += incr
+        self.recalculate_avg()
         return self.stats[key]
+
+    # recalculates stored average
+    def recalculate_avg(self):
+        if self.stats["AB"] != 0:
+            self.stats["AVG"] = round(self.stats["H"] / float(self.stats["AB"]), 3)
 
     #need a function to reset all stats to 0
 
@@ -121,6 +130,9 @@ class Player(object):
 
     def get_attr_obj(self):
         return self.attr
+
+    def get_name(self):
+        return self.name
 
     # sets stat object at key to value
     # returns final value stored

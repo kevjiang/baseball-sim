@@ -62,7 +62,8 @@ class Game(object):
 
     def __init__(self, inning=1, outs=0, runners={1: None, 2: None, 3: None},
                  score=0, total_hits=0, complete=False,
-                 lineup=([Player()]*lineup_size), live_update=False):
+                 lineup=([Player()]*lineup_size), live_update=False,
+                 game_summary=False):
         """
         Return a Game object with attributes specified
         If no attributes specified, returns a game starting from the first inning
@@ -76,6 +77,8 @@ class Game(object):
         self.lineup = lineup
         self.live_update = live_update
 
+        self._original_lineup = lineup[:]  # keeps original lineup order for reference even as lineup is altered throughout Game
+
     def play_ball(self):
         """
         Plays the baseball game until completion i.e. until max_innings+1 is reached
@@ -83,6 +86,13 @@ class Game(object):
         while (self.inning <= self.max_innings):
             self.play_inning()
         self.complete = True
+
+        # Update player G stat
+        for player in self.lineup:
+            player.incr_stats_obj("G", 1)
+
+        if self.game_summary:
+            self.game_summary()
 
     def play_inning(self):
         """
@@ -104,8 +114,11 @@ class Game(object):
 
     def event_handler(self, event, player):
         """
-        Given event, calls appropriate event handler
+        Given event, calls appropriate event handler.
+        Also, increments player AB statistic
         """
+        player.incr_stats_obj("PA", 1)  # increment PA by 1
+
         if event == "single":
             self.single(player)
         elif event == "double":
@@ -123,13 +136,17 @@ class Game(object):
         else:
             assert False, "handle_event: unknown event given"
 
-    def single(self, player):
+    def single(self, player):  # DANGER, small bug can potentially result in 2 outs...
         r = self.runners
+        score_to_add = 0
+        outs_to_add = 0
+        runners_scored = []  # list of players who scored
 
         # Runner on third scores (99% certain Levitt 1999)
         if r[3]:
+            runners_scored.append(r[3])
             r[3] = None
-            self.score += 1
+            score_to_add += 1
 
         # Runner on second
         if r[2]:
@@ -141,11 +158,12 @@ class Game(object):
                 r[3] = r[2]
                 r[2] = None
             elif event == "2-h":
+                runners_scored.append(r[2])
                 r[2] = None
-                self.score += 1
+                score_to_add += 1
             elif event == "2-x":
                 r[2] = None
-                self.outs += 1
+                outs_to_add += 1
             else:
                 assert False, "single: Shouldn't get here"
 
@@ -160,30 +178,50 @@ class Game(object):
                 r[3] = r[1]
                 r[1] = None
             elif event == "1-h":
+                runners_scored.append(r[1])
                 r[1] = None
-                self.score += 1
+                score_to_add += 1
             elif event == "1-x":
                 r[1] = None
-                self.outs += 1
+                outs_to_add += 1
             else:
                 assert False, "single: Shouldn't get here"
 
         # Hitter now on first
         r[1] = player
+
+        # Updates to game state
+        self.score += score_to_add
+        self.outs += outs_to_add
         self.total_hits += 1
+
+        # Updates to player stats
+        player.incr_stats_obj("AB", 1)
+        player.incr_stats_obj("H", 1)
+        player.incr_stats_obj("1B", 1)
+        player.incr_stats_obj("RBI", score_to_add)
+
+        # Updates to runner stats
+        for runner in runners_scored:
+            runner.incr_stats_obj("R", 1)
 
     def double(self, player):
         r = self.runners
+        score_to_add = 0
+        outs_to_add = 0
+        runners_scored = []  # list of players who scored
 
         # Runner on third scores
         if r[3]:
+            runners_scored.append(r[3])
             r[3] = None
-            self.score += 1
+            score_to_add += 1
 
         # Runner on second scores (98.4% certain Levitt 1999)
         if r[2]:
+            runners_scored.append(r[2])
             r[2] = None
-            self.score += 1
+            score_to_add += 1
 
         # Runner on first has three possible outcomes based on Levitt (1999)
         # 1) 1-3 536
@@ -196,51 +234,102 @@ class Game(object):
                 r[3] = r[1]
                 r[1] = None
             elif event == "1-h":
+                runners_scored.append(r[1])
                 r[1] = None
-                self.score += 1
+                score_to_add += 1
             elif event == "1-x":
                 r[1] = None
-                self.outs += 1
+                outs_to_add += 1
             else:
                 assert False, "double: Shouldn't get here"
 
         # Hitter now on second
         r[2] = player
+
+        # Updates to game state
+        self.score += score_to_add
+        self.outs += outs_to_add
         self.total_hits += 1
+
+        # Updates to player stats
+        player.incr_stats_obj("AB", 1)
+        player.incr_stats_obj("H", 1)
+        player.incr_stats_obj("2B", 1)
+        player.incr_stats_obj("RBI", score_to_add)
+
+        # Updates to runner stats
+        for runner in runners_scored:
+            runner.incr_stats_obj("R", 1)
 
     def triple(self, player):
         r = self.runners
+        score_to_add = 0
+        runners_scored = []  # list of players who scored
 
         # All runners score
         for key in r:
             if r[key]:
+                runners_scored.append(r[key])
                 r[key] = None
-                self.score += 1
+                score_to_add += 1
 
         # Hitter now on third
         r[3] = player
+
+        # Updates to game state
+        self.score += score_to_add
         self.total_hits += 1
+
+        # Updates to player stats
+        player.incr_stats_obj("AB", 1)
+        player.incr_stats_obj("H", 1)
+        player.incr_stats_obj("3B", 1)
+        player.incr_stats_obj("RBI", score_to_add)
+
+        # Updates to runner stats
+        for runner in runners_scored:
+            runner.incr_stats_obj("R", 1)
 
     def home_run(self, player):
         r = self.runners
+        score_to_add = 0
+        runners_scored = []  # list of players who scored
 
         # All runners score
         for key in r:
             if r[key]:
+                runners_scored.append(r[key])
                 r[key] = None
-                self.score += 1
+                score_to_add += 1
 
-        # Hitter scores too and bases cleared
-        self.score += 1
+        # Note that hitter scores too
+        score_to_add += 1
+
+        # Updates to game state
+        self.score += score_to_add
         self.total_hits += 1
+
+        # Updates to player stats
+        player.incr_stats_obj("AB", 1)
+        player.incr_stats_obj("H", 1)
+        player.incr_stats_obj("HR", 1)
+        player.incr_stats_obj("RBI", score_to_add)
+        player.incr_stats_obj("R", 1)
+
+        # Updates to runner stats
+        for runner in runners_scored:
+            runner.incr_stats_obj("R", 1)
 
     def walk(self, player):
         r = self.runners
+        score_to_add = 0
+        runners_scored = []  # list of players who scored
 
         # If runner on 1,2,3, runner on third scores
         if r[1] and r[2] and r[3]:
+            runners_scored.append(r[3])
             r[3] = None
-            self.score += 1
+            score_to_add += 1
 
         # If runner on 1,2, runner on second moves to third
         if r[1] and r[2]:
@@ -255,13 +344,31 @@ class Game(object):
         # Hitter now on first
         r[1] = player
 
+        # Updates to game state
+        self.score += score_to_add
+
+        # Updates to player stats
+        player.incr_stats_obj("BB", 1)
+        player.incr_stats_obj("RBI", score_to_add)
+
+        # Updates to runner stats
+        for runner in runners_scored:
+            runner.incr_stats_obj("R", 1)
+
     def strikeout(self, player):
         # Hitter out, increment outs
         self.outs += 1
 
+        # Updates to player stats
+        player.incr_stats_obj("AB", 1)
+        player.incr_stats_obj("SO", 1)
+
     def bbo(self, player):
         # Hitter out, increment outs
         self.outs += 1
+
+        # Updates to player stats
+        player.incr_stats_obj("AB", 1)
 
     def play_by_play(self, event, player):
         print "Inn: " + str(self.inning) + " Outs: " + str(self.outs) + \
@@ -269,3 +376,7 @@ class Game(object):
             str(player) + ", " + event + " 1: " + str(self.runners[1]) + \
             ", 2: " + str(self.runners[2]) + \
             ", 3: " + str(self.runners[3])
+
+    def game_summary(self):
+        for player in self._original_lineup:
+            print player.get_name() + ": " + str(player.get_stats_obj().get_stats_dic())

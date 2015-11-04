@@ -43,7 +43,7 @@ def main():
     total_score = 0
 
     for _ in range(num_sim):
-        g = Game(live_update=True, lineup=lineup)
+        g = Game(live_update=True, game_summary=True, lineup=lineup)
         g.play_ball()
         total_score += g.score
 
