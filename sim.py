@@ -29,7 +29,7 @@ def csv_to_lineup(filename):
                       name=a['Name'],
                       attr=Attr(single=a['1B'], double=a['2B'], triple=a['3B'],
                                 home_run=a['HR'], walk=a['BB']+a['IBB']+a['HBP'],
-                                strikeout=a['SO'], bbo=a['AB']-a['H']),
+                                strikeout=a['SO'], bbo=a['AB']-a['H']-a['SO']),
                       stats=Stats()))
     return lineup
 
@@ -37,7 +37,7 @@ def csv_to_lineup(filename):
 def main():
     lineup = csv_to_lineup('bos_2004_ws_g2.csv')
     for elem in lineup:
-        print str(elem)
+        print str(elem) + ", " + str(elem.get_attr_obj().get_attr_dic())
 
     num_sim = 162
     total_score = 0
@@ -45,7 +45,7 @@ def main():
     for _ in range(num_sim):
         g = Game(live_update=True, game_summary=True, lineup=lineup)
         g.play_ball()
-        total_score += g.score
+        total_score += g.get_score()
 
     print total_score/float(num_sim)
 

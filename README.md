@@ -9,3 +9,4 @@ To do
 3) Baserunning based on real player data
 4) Error potential.  Sacrifce potential.  Baserunner movement on bbo potential
 5) Add pitchers to the mix
+6) Figure out why runs are about 1 run/game too high!  (or maybe it's valid?)

@@ -55,6 +55,7 @@ class Game(object):
         complete: boolean True if game complete, False otherwise
         lineup: list (representing a queue) of Player objects in lineup order
         live_update: True if want printed updates of game, False otherwise
+        game_summary: True if want printed game summary, False otherwise
     """
     max_innings = 9
     max_outs = 3
@@ -138,7 +139,6 @@ class Game(object):
 
     def single(self, player):  # DANGER, small bug can potentially result in 2 outs...
         r = self.runners
-        score_to_add = 0
         outs_to_add = 0
         runners_scored = []  # list of players who scored
 
@@ -146,7 +146,6 @@ class Game(object):
         if r[3]:
             runners_scored.append(r[3])
             r[3] = None
-            score_to_add += 1
 
         # Runner on second
         if r[2]:
@@ -160,7 +159,6 @@ class Game(object):
             elif event == "2-h":
                 runners_scored.append(r[2])
                 r[2] = None
-                score_to_add += 1
             elif event == "2-x":
                 r[2] = None
                 outs_to_add += 1
@@ -180,7 +178,6 @@ class Game(object):
             elif event == "1-h":
                 runners_scored.append(r[1])
                 r[1] = None
-                score_to_add += 1
             elif event == "1-x":
                 r[1] = None
                 outs_to_add += 1
@@ -191,6 +188,7 @@ class Game(object):
         r[1] = player
 
         # Updates to game state
+        score_to_add = len(runners_scored)
         self.score += score_to_add
         self.outs += outs_to_add
         self.total_hits += 1
@@ -207,7 +205,6 @@ class Game(object):
 
     def double(self, player):
         r = self.runners
-        score_to_add = 0
         outs_to_add = 0
         runners_scored = []  # list of players who scored
 
@@ -215,13 +212,11 @@ class Game(object):
         if r[3]:
             runners_scored.append(r[3])
             r[3] = None
-            score_to_add += 1
 
         # Runner on second scores (98.4% certain Levitt 1999)
         if r[2]:
             runners_scored.append(r[2])
             r[2] = None
-            score_to_add += 1
 
         # Runner on first has three possible outcomes based on Levitt (1999)
         # 1) 1-3 536
@@ -236,7 +231,6 @@ class Game(object):
             elif event == "1-h":
                 runners_scored.append(r[1])
                 r[1] = None
-                score_to_add += 1
             elif event == "1-x":
                 r[1] = None
                 outs_to_add += 1
@@ -247,6 +241,7 @@ class Game(object):
         r[2] = player
 
         # Updates to game state
+        score_to_add = len(runners_scored)
         self.score += score_to_add
         self.outs += outs_to_add
         self.total_hits += 1
@@ -263,7 +258,6 @@ class Game(object):
 
     def triple(self, player):
         r = self.runners
-        score_to_add = 0
         runners_scored = []  # list of players who scored
 
         # All runners score
@@ -271,12 +265,12 @@ class Game(object):
             if r[key]:
                 runners_scored.append(r[key])
                 r[key] = None
-                score_to_add += 1
 
         # Hitter now on third
         r[3] = player
 
         # Updates to game state
+        score_to_add = len(runners_scored)
         self.score += score_to_add
         self.total_hits += 1
 
@@ -300,12 +294,12 @@ class Game(object):
             if r[key]:
                 runners_scored.append(r[key])
                 r[key] = None
-                score_to_add += 1
 
         # Note that hitter scores too
-        score_to_add += 1
+        runners_scored.append(player)
 
         # Updates to game state
+        score_to_add = len(runners_scored)
         self.score += score_to_add
         self.total_hits += 1
 
@@ -322,14 +316,12 @@ class Game(object):
 
     def walk(self, player):
         r = self.runners
-        score_to_add = 0
         runners_scored = []  # list of players who scored
 
         # If runner on 1,2,3, runner on third scores
         if r[1] and r[2] and r[3]:
             runners_scored.append(r[3])
             r[3] = None
-            score_to_add += 1
 
         # If runner on 1,2, runner on second moves to third
         if r[1] and r[2]:
@@ -345,6 +337,7 @@ class Game(object):
         r[1] = player
 
         # Updates to game state
+        score_to_add = len(runners_scored)
         self.score += score_to_add
 
         # Updates to player stats
@@ -380,3 +373,6 @@ class Game(object):
     def game_summary(self):
         for player in self._original_lineup:
             print player.get_name() + ": " + str(player.get_stats_obj().get_stats_dic())
+
+    def get_score(self):
+        return self.score

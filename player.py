@@ -52,7 +52,7 @@ class Stats(object):
     """
 
     def __init__(self, G=0, AB=0, PA=0, H=0, _1B=0, _2B=0, _3B=0, HR=0, R=0, RBI=0,
-                 BB=0, SO=0, AVG=0.0):
+                 BB=0, SO=0, AVG=0.0, SLG=0.0, OBP=0.0):
         """
         Return a Stats object with specified probabilities
         """
@@ -70,6 +70,8 @@ class Stats(object):
         self.stats["BB"] = BB  # (but is really BB+IBB+HBP)
         self.stats["SO"] = SO
         self.stats["AVG"] = AVG  # will only be recalculated through recalculate_avg function internally
+        self.stats["SLG"] = SLG  # will only be recalculated through recalculate_slg function internally
+        self.stats["OBP"] = OBP  # will only be recalculated through recalculate_obp function internally
 
     def get_stats_dic(self):
         return self.stats
@@ -79,7 +81,7 @@ class Stats(object):
     # note will always recalculate AVG based on new information
     def set_stats_dic(self, key, value):
         self.stats[key] = value
-        self.recalculate_avg()
+        self.recalculate_all()
         return self.stats[key]
 
     # increment stats dic at key by incr
@@ -87,13 +89,34 @@ class Stats(object):
     # note will always recalculate AVG based on new information
     def incr_stats_dic(self, key, incr):
         self.stats[key] += incr
-        self.recalculate_avg()
+        self.recalculate_all()
         return self.stats[key]
 
     # recalculates stored average rounded to 3 decimal places
     def recalculate_avg(self):
         if self.stats["AB"] != 0:
             self.stats["AVG"] = round(self.stats["H"] / float(self.stats["AB"]), 3)
+
+    # recalculates stored SLG rounded to 3 decimal places
+    def recalculate_slg(self):
+        if self.stats["AB"] != 0:
+            numerator = self.stats["1B"] + 2 * self.stats["2B"] + \
+                3 * self.stats["3B"] + 4 * self.stats["HR"]
+            self.stats["SLG"] = round(numerator / float(self.stats["AB"]), 3)
+
+    # recalculates stored OBP rounded to
+    # real formula is H+BB+HBP/AB+BB+HBP+SF, which isn't used here yet...
+    def recalculate_obp(self):
+        denominator = self.stats["AB"] + self.stats["BB"]
+        if denominator != 0:
+            numerator = self.stats["H"] + self.stats["BB"]
+            self.stats["OBP"] = round(numerator / float(denominator), 3)
+
+    # calls all recalculations necessary after stat update
+    def recalculate_all(self):
+        self.recalculate_avg()
+        self.recalculate_slg()
+        self.recalculate_obp()
 
     #need a function to reset all stats to 0
 
