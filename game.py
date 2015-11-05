@@ -5,8 +5,8 @@ Time For 1 million game runs
 real    3m29.357s
 '''
 
-import random
 from player import Player
+from helpers import weighted_choice
 
 events = {
     "single": 1,
@@ -27,18 +27,6 @@ events2 = {
     6: "strikeout",
     7: "bbo"
 }
-
-
-# given dictionary of weighted choices, returns random weighted choice
-def weighted_choice(choices):
-    total = sum(v for k, v in choices.items())
-    r = random.uniform(0, total)
-    upto = 0
-    for k, v in choices.items():
-        if upto + v > r:
-            return k
-        upto += v
-    assert False, "weighted_choice: Shouldn't get here"
 
 
 class Game(object):
