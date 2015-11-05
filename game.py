@@ -65,6 +65,7 @@ class Game(object):
         self.complete = complete
         self.lineup = lineup[:]
         self.live_update = live_update
+        self.game_summary = game_summary
 
         self._original_lineup = lineup[:]  # keeps original lineup order for reference even as lineup is altered throughout Game
 
@@ -81,7 +82,7 @@ class Game(object):
             player.incr_stats_obj("G", 1)
 
         if self.game_summary:
-            self.game_summary()
+            self.print_game_summary()
 
     def play_inning(self):
         """
@@ -358,7 +359,7 @@ class Game(object):
             ", 2: " + str(self.runners[2]) + \
             ", 3: " + str(self.runners[3])
 
-    def game_summary(self):
+    def print_game_summary(self):
         for player in self._original_lineup:
             print player.get_name() + ": " + str(player.get_stats_obj().get_stats_dic())
 

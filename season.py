@@ -26,6 +26,9 @@ class Season(object):
             g.play_ball()
             self.total_score += g.get_score()
 
-    def season_summary(self):
+    def print_season_summary(self):
         for player in self.lineup:
             print player.get_name() + ": " + str(player.get_stats_obj().get_stats_dic())
+
+    def get_runs_per_game(self):
+        return self.total_score / float(self.num_games)
