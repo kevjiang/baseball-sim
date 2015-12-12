@@ -2,74 +2,74 @@ Lineup Report
 
 TLDR: pick one of these lineups for the best value: 
 Lineup 1: 
-1): Rusney Castillo
-2): Jackie Bradley Jr.
-3): David Ortiz
-4): Hanley Ramirez
-5): Dustin Pedroia
-6): Mookie Betts
-7): Xander Bogaerts
-8): Brock Holt
+1): David Ortiz
+2): Dustin Pedroia
+3): Xander Bogaerts
+4): Rusney Castillo
+5): Mookie Betts
+6): Brock Holt
+7): Jackie Bradley Jr.
+8): Hanley Ramirez
 9): Pablo Sandoval
-Runs per game: 6.080247 
+Runs per game: 6.240741 
 
 Lineup 2: 
-1): Xander Bogaerts
-2): David Ortiz
+1): Pablo Sandoval
+2): Dustin Pedroia
 3): Mookie Betts
 4): Hanley Ramirez
-5): Rusney Castillo
-6): Dustin Pedroia
-7): Jackie Bradley Jr.
-8): Brock Holt
-9): Pablo Sandoval
-Runs per game: 6.049383 
+5): David Ortiz
+6): Jackie Bradley Jr.
+7): Rusney Castillo
+8): Xander Bogaerts
+9): Brock Holt
+Runs per game: 6.197531 
 
 Lineup 3: 
-1): Jackie Bradley Jr.
-2): Rusney Castillo
-3): Dustin Pedroia
-4): Brock Holt
-5): Pablo Sandoval
-6): Mookie Betts
-7): Hanley Ramirez
-8): Xander Bogaerts
-9): David Ortiz
-Runs per game: 5.851852 
+1): Mookie Betts
+2): Pablo Sandoval
+3): David Ortiz
+4): Jackie Bradley Jr.
+5): Rusney Castillo
+6): Hanley Ramirez
+7): Xander Bogaerts
+8): Dustin Pedroia
+9): Brock Holt
+Runs per game: 6.043210 
 
 Lineup 4: 
 1): Brock Holt
-2): Hanley Ramirez
+2): Rusney Castillo
 3): David Ortiz
-4): Rusney Castillo
-5): Dustin Pedroia
-6): Mookie Betts
-7): Xander Bogaerts
-8): Jackie Bradley Jr.
-9): Pablo Sandoval
-Runs per game: 5.839506 
+4): Dustin Pedroia
+5): Hanley Ramirez
+6): Xander Bogaerts
+7): Pablo Sandoval
+8): Mookie Betts
+9): Jackie Bradley Jr.
+Runs per game: 5.969136 
 
 Lineup 5: 
-1): David Ortiz
-2): Dustin Pedroia
-3): Hanley Ramirez
+1): Dustin Pedroia
+2): Mookie Betts
+3): Jackie Bradley Jr.
 4): Xander Bogaerts
-5): Jackie Bradley Jr.
-6): Mookie Betts
-7): Rusney Castillo
-8): Brock Holt
-9): Pablo Sandoval
-Runs per game: 5.524691 
+5): Brock Holt
+6): Hanley Ramirez
+7): David Ortiz
+8): Pablo Sandoval
+9): Rusney Castillo
+Runs per game: 5.969136 
 
 
 Table of Runs Per Game Based on Players by Batting Order Positions
                    Player	     Pos 1	     Pos 2	     Pos 3	     Pos 4	     Pos 5	     Pos 6	     Pos 7	     Pos 8	     Pos 9
-             Mookie Betts	  5.120370	  5.500000	  6.049383	  0.000000	  0.000000	  5.654321	  0.000000	  0.000000	  0.000000	
-           Hanley Ramirez	  5.290123	  5.382716	  5.524691	  6.064815	  0.000000	  5.407407	  5.595679	  0.000000	  0.000000	
-          Rusney Castillo	  6.080247	  5.851852	  5.120370	  5.839506	  6.049383	  0.000000	  5.438272	  5.339506	  0.000000	
-           Dustin Pedroia	  5.339506	  5.524691	  5.570988	  4.925926	  5.959877	  6.049383	  5.314815	  5.500000	  0.000000	
-          Xander Bogaerts	  6.049383	  0.000000	  0.000000	  5.419753	  4.925926	  0.000000	  5.959877	  5.570988	  0.000000	
-              David Ortiz	  5.524691	  5.694444	  5.959877	  0.000000	  5.407407	  4.925926	  0.000000	  0.000000	  5.570988	
-       Jackie Bradley Jr.	  5.851852	  6.080247	  5.500000	  5.290123	  5.432099	  0.000000	  5.487654	  5.577160	  0.000000	
-               Brock Holt	  5.839506	  5.290123	  5.339506	  5.851852	  0.000000	  0.000000	  0.000000	  5.645062	  5.407407	
-           Pablo Sandoval	  5.500000	  5.314815	  0.000000	  0.000000	  5.570988	  0.000000	  0.000000	  0.000000	  5.626543	
+               Brock Holt	  5.540741	  5.388889	  5.689300	  5.617284	  5.506173	  5.668724	  5.600000	  0.000000	  5.546639	
+       Jackie Bradley Jr.	  5.544444	  5.438272	  5.514815	  5.505401	  5.591049	  5.612346	  5.645679	  5.668430	  5.483539	
+          Xander Bogaerts	  5.518519	  5.644033	  5.411111	  5.720165	  5.462963	  5.432099	  5.716049	  5.580864	  5.416667	
+          Rusney Castillo	  5.529630	  5.591049	  5.435185	  5.598765	  5.621914	  5.582892	  5.575617	  5.358025	  5.547840	
+              David Ortiz	  5.629630	  5.577601	  5.604252	  5.569959	  5.543210	  5.638889	  5.535273	  5.522377	  5.450617	
+             Mookie Betts	  5.586420	  5.538066	  5.714286	  5.563272	  5.766975	  5.523663	  5.438272	  5.491021	  0.000000	
+           Dustin Pedroia	  5.508230	  5.934568	  5.529630	  5.546296	  5.387654	  5.446914	  5.495591	  5.617284	  5.619136	
+           Hanley Ramirez	  5.788889	  5.516975	  0.000000	  5.460494	  5.620811	  5.613757	  5.458333	  5.495885	  5.596120	
+           Pablo Sandoval	  5.460905	  5.489198	  5.516461	  5.648148	  5.497942	  5.622222	  5.622428	  5.746914	  5.617284	

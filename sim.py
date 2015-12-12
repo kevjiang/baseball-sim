@@ -115,6 +115,15 @@ def explain_to_file(sample_best_seasons, runs_matrix, name_to_index):
     fp.close()
 
 
+#complete function call sequence to create and write to file for best lineup explanation
+def best_lineup_complete(lineup, num_seasons):
+    ordered_seasons = sim_and_rank_seasons(lineup, num_seasons)
+
+    good_tup = ordered_seasons_expl(ordered_seasons)
+
+    explain_to_file(good_tup[0], good_tup[1], good_tup[2])
+
+
 def main():
     # lineup = csv_to_lineup('bos_2004_ws_g2.csv')
     lineup = csv_to_lineup('bos_2015_random_order.csv')
@@ -138,16 +147,7 @@ def main():
     # s.print_season_summary()
     # print "Runs per game: " + str(s.get_runs_per_game())
 
-    ordered_seasons = sim_and_rank_seasons(lineup=lineup, num_seasons=10)
-    for s in ordered_seasons:
-        print s.print_season_summary()
-        print s.get_runs_per_game()
-    print "Num Seasons:" + str(len(ordered_seasons))
-
-    good_tup = ordered_seasons_expl(ordered_seasons)
-    print good_tup
-
-    explain_to_file(good_tup[0], good_tup[1], good_tup[2])
+    best_lineup_complete(lineup, num_seasons=50)
 
 
 if __name__ == "__main__":
