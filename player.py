@@ -118,7 +118,23 @@ class Stats(object):
         self.recalculate_slg()
         self.recalculate_obp()
 
-    #need a function to reset all stats to 0
+    #function to reset all stats to 0
+    def reset_stats(self):
+        self.stats["G"] = 0
+        self.stats["AB"] = 0
+        self.stats["PA"] = 0
+        self.stats["H"] = 0
+        self.stats["1B"] = 0
+        self.stats["2B"] = 0
+        self.stats["3B"] = 0
+        self.stats["HR"] = 0
+        self.stats["R"] = 0
+        self.stats["RBI"] = 0
+        self.stats["BB"] = 0  # (but is really BB+IBB+HBP)
+        self.stats["SO"] = 0
+        self.stats["AVG"] = 0.0  # will only be recalculated through recalculate_avg function internally
+        self.stats["SLG"] = 0.0  # will only be recalculated through recalculate_slg function internally
+        self.stats["OBP"] = 0.0
 
 
 class Player(object):

@@ -1,6 +1,7 @@
 import random
 import csv
 from player import Player, Stats, Attr
+import sys
 
 
 # given dictionary of weighted choices, returns random weighted choice
@@ -21,6 +22,7 @@ def csv_to_lineup(filename):
     reader = csv.reader(csvfile)
     column_names = next(reader)
     attr_dic_list = []
+    player_names_list = []
 
     for attr_list in reader:  # append player stats to list
         attr_dic = {}
@@ -43,4 +45,10 @@ def csv_to_lineup(filename):
                                 home_run=a['HR'], walk=a['BB']+a['IBB']+a['HBP'],
                                 strikeout=a['SO'], bbo=a['AB']-a['H']-a['SO']),
                       stats=Stats()))
+
+    # exit program if duplicate names
+    if len(player_names_list) != len(set(player_names_list)):
+        print "Error: cannot use duplicate names in lineup!"
+        sys.exit()
+
     return lineup

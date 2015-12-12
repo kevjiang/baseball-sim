@@ -32,3 +32,6 @@ class Season(object):
 
     def get_runs_per_game(self):
         return self.total_score / float(self.num_games)
+
+    def get_lineup(self):
+        return self.lineup
