@@ -1,0 +1,75 @@
+Lineup Report
+
+TLDR: pick one of these lineups for the best value: 
+Lineup 1: 
+1): Rusney Castillo
+2): Jackie Bradley Jr.
+3): David Ortiz
+4): Hanley Ramirez
+5): Dustin Pedroia
+6): Mookie Betts
+7): Xander Bogaerts
+8): Brock Holt
+9): Pablo Sandoval
+Runs per game: 6.080247 
+
+Lineup 2: 
+1): Xander Bogaerts
+2): David Ortiz
+3): Mookie Betts
+4): Hanley Ramirez
+5): Rusney Castillo
+6): Dustin Pedroia
+7): Jackie Bradley Jr.
+8): Brock Holt
+9): Pablo Sandoval
+Runs per game: 6.049383 
+
+Lineup 3: 
+1): Jackie Bradley Jr.
+2): Rusney Castillo
+3): Dustin Pedroia
+4): Brock Holt
+5): Pablo Sandoval
+6): Mookie Betts
+7): Hanley Ramirez
+8): Xander Bogaerts
+9): David Ortiz
+Runs per game: 5.851852 
+
+Lineup 4: 
+1): Brock Holt
+2): Hanley Ramirez
+3): David Ortiz
+4): Rusney Castillo
+5): Dustin Pedroia
+6): Mookie Betts
+7): Xander Bogaerts
+8): Jackie Bradley Jr.
+9): Pablo Sandoval
+Runs per game: 5.839506 
+
+Lineup 5: 
+1): David Ortiz
+2): Dustin Pedroia
+3): Hanley Ramirez
+4): Xander Bogaerts
+5): Jackie Bradley Jr.
+6): Mookie Betts
+7): Rusney Castillo
+8): Brock Holt
+9): Pablo Sandoval
+Runs per game: 5.524691 
+
+
+Table of Runs Per Game Based on Players by Batting Order Positions
+                   Player	     Pos 1	     Pos 2	     Pos 3	     Pos 4	     Pos 5	     Pos 6	     Pos 7	     Pos 8	     Pos 9
+             Mookie Betts	  5.120370	  5.500000	  6.049383	  0.000000	  0.000000	  5.654321	  0.000000	  0.000000	  0.000000	
+           Hanley Ramirez	  5.290123	  5.382716	  5.524691	  6.064815	  0.000000	  5.407407	  5.595679	  0.000000	  0.000000	
+          Rusney Castillo	  6.080247	  5.851852	  5.120370	  5.839506	  6.049383	  0.000000	  5.438272	  5.339506	  0.000000	
+           Dustin Pedroia	  5.339506	  5.524691	  5.570988	  4.925926	  5.959877	  6.049383	  5.314815	  5.500000	  0.000000	
+          Xander Bogaerts	  6.049383	  0.000000	  0.000000	  5.419753	  4.925926	  0.000000	  5.959877	  5.570988	  0.000000	
+              David Ortiz	  5.524691	  5.694444	  5.959877	  0.000000	  5.407407	  4.925926	  0.000000	  0.000000	  5.570988	
+       Jackie Bradley Jr.	  5.851852	  6.080247	  5.500000	  5.290123	  5.432099	  0.000000	  5.487654	  5.577160	  0.000000	
+               Brock Holt	  5.839506	  5.290123	  5.339506	  5.851852	  0.000000	  0.000000	  0.000000	  5.645062	  5.407407	
+           Pablo Sandoval	  5.500000	  5.314815	  0.000000	  0.000000	  5.570988	  0.000000	  0.000000	  0.000000	  5.626543	
