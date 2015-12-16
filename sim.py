@@ -179,7 +179,7 @@ def best_lineup_complete(lineup, num_rotations=100):
 
 #returns the lineup position that generates the most RBIs for this player
 # (and some sample ideal lineups)
-def maxmimize_rbi_complete(lineup, num_seasons, name):
+def maxmimize_rbi_complete(lineup, num_rotations, name):
     return
 
 
