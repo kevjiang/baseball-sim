@@ -124,6 +124,11 @@ def best_lineup_complete(lineup, num_seasons):
     explain_to_file(good_tup[0], good_tup[1], good_tup[2])
 
 
+#returns the lineup position that generates the most RBIs for this player
+# (and some sample ideal lineups)
+def maxmimize_rbi_complete(lineup, num_seasons, name):
+
+
 def main():
     # lineup = csv_to_lineup('bos_2004_ws_g2.csv')
     lineup = csv_to_lineup('bos_2015_random_order.csv')
