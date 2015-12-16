@@ -6,37 +6,65 @@ from copy import deepcopy
 from random import shuffle
 from math import ceil
 import sys
+import heapq
+
 
 
 # simulate season for every permutation of lineup and rank lineups
 # from most runs/game to least runs/game
-def sim_and_rank_seasons(lineup, num_seasons=1000):
+def sim_and_rank_seasons(lineup, num_rotations=100):
     ordered_seasons = []  # stores seasons in descending order by runs/game
     counter = 0
-    counter_modulo = ceil(362880.0/num_seasons)
 
     lineup_copy = lineup[:]
-    shuffle(lineup_copy)  # to ensure random selection
 
-    for l in permutations(lineup_copy):
-        if counter % counter_modulo == 0:
-            # play full season with l
-            s = Season(lineup=deepcopy(list(l)), num_games=162)
+    while counter < num_rotations:
+        # generate random rotation
+        shuffle(lineup_copy)
+
+        # test all 9 possible orders of given rotation
+        for _ in range(9):
+            lineup_copy.append(lineup_copy.pop(0))  # place first batter at end
+            s = Season(lineup=deepcopy(list(lineup_copy)), num_games=162)
             s.play_season()
             ordered_seasons.append(s)
-            print counter
 
         counter += 1
 
     ordered_seasons.sort(key=lambda s: s.get_runs_per_game())
 
+    # calculate average difference
+    # best_run_total = 0
+    # worst_run_total = 0
+    # best_seasons = [ordered_seasons[-1], ordered_seasons[-2], ordered_seasons[-3], ordered_seasons[-4], ordered_seasons[-5]]
+    # worst_seasons = [ordered_seasons[0], ordered_seasons[1], ordered_seasons[2], ordered_seasons[3], ordered_seasons[4]]
+    # num_iter = 3
+
+    # for seas in best_seasons:
+    #     i = 0
+    #     while i < num_iter:
+    #         s = Season(lineup=deepcopy(list(seas.get_lineup())), num_games=162)
+    #         s.play_season()
+    #         best_run_total += s.get_runs_per_game()
+    #         i += 1
+
+    # for seas in worst_seasons:
+    #     i = 0
+    #     while i < num_iter:
+    #         s = Season(lineup=deepcopy(list(seas.get_lineup())), num_games=162)
+    #         s.play_season()
+    #         worst_run_total += s.get_runs_per_game()
+    #         i += 1
+
+    # average_difference = (best_run_total - worst_run_total) / (num_iter*5)
+
     return ordered_seasons
 
 
 # Returns:
-# 1) sample top 3 best lineups
+# 1) sample top 5 best lineups
 # 2) player, position, runs/game table
-# 2b) names_to_index table
+# 3) names_to_index table
 # in a tuple
 
 # Note: the position is indexed 0-8, but real positions are 1-9
@@ -84,7 +112,7 @@ def ordered_seasons_expl(ordered_seasons):
 
 
 #create file with explanation of best lineup
-def explain_to_file(sample_best_seasons, runs_matrix, name_to_index):
+def explain_to_file(sample_best_seasons, runs_matrix, name_to_index, num_seasons):
     fp = open('final_report.txt', 'w')
     fp.write("Lineup Report\n\n")
     fp.write("TLDR: pick one of these lineups for the best value: \n")
@@ -97,7 +125,9 @@ def explain_to_file(sample_best_seasons, runs_matrix, name_to_index):
         fp.write("Runs per game: %f \n" % (season.get_runs_per_game()))
         fp.write("\n")
 
-    fp.write("\n%s\n" % ("Table of Runs Per Game Based on Players by Batting Order Positions"))
+    fp.write("blah blah blah; %d simulations\n\n" % (num_seasons))
+
+    fp.write("\n%s\n" % ("Table of Runs Per Game Based on Players Batting Order Positions"))
 
     # create index_to_name dictionary from name_to_index dictionary
     index_to_name = dict((v, k) for k, v in name_to_index.iteritems())
@@ -111,22 +141,46 @@ def explain_to_file(sample_best_seasons, runs_matrix, name_to_index):
         for j, col in enumerate(row):
             fp.write("%10f\t" % (runs_matrix[i][j]))
         fp.write("\n")
+    fp.write("\n")
+
+    # top 3 lineup spots per player
+    # first, create dictionary with key as name and values as list with top 3 lineup spots
+    top_lineup_spots_dic = {}
+    for i in range(9):
+        top_3_run_values = heapq.nlargest(3, runs_matrix[i])
+        top_3_positions = []
+        for v in top_3_run_values:
+            for j, r in enumerate(runs_matrix[i]):
+                if v == r:
+                    top_3_positions.append(j+1)
+                    break
+
+        top_lineup_spots_dic[index_to_name[i]] = top_3_positions
+
+    # next, write dictionary in easily readable format in file
+    for i, row in enumerate(runs_matrix):
+        top_3 = top_lineup_spots_dic[index_to_name[i]]
+        fp.write("%25s:\t Best: %d, Better: %d, Good: %d\t" % (index_to_name[i], top_3[0], top_3[1], top_3[2]))
+        fp.write("\n")
+
+    print top_lineup_spots_dic
 
     fp.close()
 
 
 #complete function call sequence to create and write to file for best lineup explanation
-def best_lineup_complete(lineup, num_seasons):
-    ordered_seasons = sim_and_rank_seasons(lineup, num_seasons)
+def best_lineup_complete(lineup, num_rotations=100):
+    ordered_seasons = sim_and_rank_seasons(lineup, num_rotations)
 
-    good_tup = ordered_seasons_expl(ordered_seasons)
+    (sample_best_seasons, runs_matrix, name_to_index) = ordered_seasons_expl(ordered_seasons)
 
-    explain_to_file(good_tup[0], good_tup[1], good_tup[2])
+    explain_to_file(sample_best_seasons, runs_matrix, name_to_index, len(ordered_seasons))
 
 
 #returns the lineup position that generates the most RBIs for this player
 # (and some sample ideal lineups)
 def maxmimize_rbi_complete(lineup, num_seasons, name):
+    return
 
 
 def main():
@@ -134,7 +188,7 @@ def main():
     lineup = csv_to_lineup('bos_2015_random_order.csv')
     print "***And the lineup is...***"
     for elem in lineup:
-        print str(elem) + ", " + str(elem.get_attr_obj().get_attr_dic())
+        print "1: " + str(elem) + ", " + str(elem.get_attr_obj().get_attr_dic())
     print "**************************"
 
     # num_sim = 162
@@ -152,7 +206,7 @@ def main():
     # s.print_season_summary()
     # print "Runs per game: " + str(s.get_runs_per_game())
 
-    best_lineup_complete(lineup, num_seasons=50)
+    best_lineup_complete(lineup, num_rotations=2)
 
 
 if __name__ == "__main__":
