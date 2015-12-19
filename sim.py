@@ -75,7 +75,7 @@ def ordered_seasons_expl(ordered_seasons):
         sys.exit()
 
     sample_best_seasons = [ordered_seasons[-1], ordered_seasons[-2], ordered_seasons[-3], ordered_seasons[-4], ordered_seasons[-5]]
-    best_season = ordered_seasons[0]
+    best_season = ordered_seasons[-1]
     best_lineup = best_season.get_lineup()
     lineup_size = len(best_lineup)
     name_to_index = {}  # dictionary converting names to an index
@@ -114,7 +114,7 @@ def ordered_seasons_expl(ordered_seasons):
 #create file with explanation of best lineup
 def explain_to_file(sample_best_seasons, runs_matrix, name_to_index, num_seasons):
     fp = open('final_report.txt', 'w')
-    fp.write("Lineup Report\n\n")
+    fp.write("Manager Report: Optimal Lineups\n\n")
     fp.write("TLDR: pick one of these lineups for the best value: \n")
 
     for i, season in enumerate(sample_best_seasons):
@@ -177,9 +177,108 @@ def best_lineup_complete(lineup, num_rotations=100):
     explain_to_file(sample_best_seasons, runs_matrix, name_to_index, len(ordered_seasons))
 
 
-#returns the lineup position that generates the most RBIs for this player
+# returns array indexed by lineup position of ordered seasons from worst to best
+# the lineup position that generates the most RBIs for this player
 # (and some sample ideal lineups)
-def maxmimize_rbi_complete(lineup, num_rotations, name):
+def rbi_sim_and_rank_seasons(lineup, trials_per_pos=2, name="David Oritz"):
+    lineup_copy = lineup[:]
+    this_player = None
+    this_player_index = -1
+    ordered_seasons = [[] for _ in range(9)]  # list of list of seasons.  Index of list corresponds to player position
+
+    # take player object of name out of lineup
+    for i, p in enumerate(lineup_copy):
+        if p.get_name() == name:
+            if this_player is None:
+                this_player = p
+                this_player_index = i
+                break
+            else:  # menas duplicate player names!
+                print "Error: cannot use duplicate names in lineup!"
+                sys.exit()
+
+    if this_player is None and this_player_index == -1:
+        print "Player name not in lineup!"
+        sys.exit()
+
+    lineup_copy.pop(this_player_index)
+
+    # test player at 1-9 spots of lineup
+    for lineup_pos in range(9):
+        for _ in range(trials_per_pos):
+            shuffle(lineup_copy)  # randomize lineup
+            lineup_copy.insert(lineup_pos, this_player)  # insert this player in appropriate spot
+
+            s = Season(lineup=deepcopy(list(lineup_copy)), num_games=162)
+            s.play_season()
+            ordered_seasons[lineup_pos].append(s)
+
+            for i, p in enumerate(lineup_copy):
+                if p.get_name() == name:
+                    del lineup_copy[i]
+                    break
+
+    return ordered_seasons
+
+# return list with average RBIs generated at each position
+def rbi_ordered_seasons_expl(lineup, ordered_seasons, name):
+    lineup_copy = lineup[:]
+    this_player = None
+
+    # get player object from lineup
+    for i, p in enumerate(lineup_copy):
+        if p.get_name() == name:
+            if this_player is None:
+                this_player = p
+                break
+
+
+    average_rbis_position = []  # average rbi's player has by position
+
+    for lis in ordered_seasons:
+        rbis = 0
+        count = 0.0
+        for s in lis:
+            this_player = None
+            for p in s.get_lineup():
+                if p.get_name() == name:
+                    this_player = p
+                    break
+            rbis += this_player.get_stats_obj().get_stats_dic()["RBI"]
+            count += 1.0
+        average_rbis_position.append(rbis/count)
+
+    return average_rbis_position
+
+def rbi_explain_to_file(lineup, name, average_rbis_position, trials_per_pos):
+    master = [(i + 1, elem) for i, elem in enumerate(average_rbis_position)]
+    master.sort(key=lambda tup: tup[1])
+    ordinal = lambda n: "%d%s" % (n,"tsnrhtdd"[(n/10%10!=1)*(n%10<4)*n%10::4])
+
+    fp = open('rbis_final_report.txt', 'w')
+    fp.write("Player Report: Maximizing RBIs for %s\n\n" % (name))
+    fp.write("TLDR: Ask (i.e. demand!) to bat in the %s spot in the lineup for maximal RBI production next season.\n\n" % (ordinal(master[-1][0])))
+
+    fp.write("Best:      %d, Average RBIs: %.1f\n" % (master[-1][0], master[-1][1]))
+    fp.write("Excellent: %d, Average RBIs: %.1f\n" % (master[-2][0], master[-2][1]))
+    fp.write("Great:     %d, Average RBIs: %.1f\n" % (master[-3][0], master[-3][1]))
+    fp.write("Good:      %d, Average RBIs: %.1f\n" % (master[-4][0], master[-4][1]))
+    fp.write("Passable:  %d, Average RBIs: %.1f\n" % (master[-5][0], master[-5][1]))
+    fp.write("Poor:      %d, Average RBIs: %.1f\n" % (master[-6][0], master[-6][1]))
+    fp.write("Bad:       %d, Average RBIs: %.1f\n" % (master[-7][0], master[-7][1]))
+    fp.write("Horrible:  %d, Average RBIs: %.1f\n" % (master[-8][0], master[-8][1]))
+    fp.write("Worst:     %d, Average RBIs: %.1f\n\n" % (master[-9][0], master[-9][1]))
+
+    fp.write("blah blah blah, explain lineup simulations and salary to RBIs correlation; %d simulations\n\n" % (trials_per_pos*9))
+
+    fp.close()
+    return
+
+
+def maximize_rbi_complete(lineup, trials_per_pos=2, name="David Oritz"):
+    ordered_seasons = rbi_sim_and_rank_seasons(lineup, trials_per_pos, name)
+    average_rbis_position = rbi_ordered_seasons_expl(lineup, ordered_seasons, name)
+    rbi_explain_to_file(lineup, name, average_rbis_position, trials_per_pos)
     return
 
 
@@ -206,7 +305,8 @@ def main():
     # s.print_season_summary()
     # print "Runs per game: " + str(s.get_runs_per_game())
 
-    best_lineup_complete(lineup, num_rotations=2)
+    # best_lineup_complete(lineup, num_rotations=2)
+    maximize_rbi_complete(lineup, trials_per_pos=2, name="David Ortiz")
 
 
 if __name__ == "__main__":
