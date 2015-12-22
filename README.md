@@ -1,5 +1,7 @@
 #baseball-sim
 
+A README for CPSC 458 (ignore for general purposes)
+
 See kjiang_project_proposal.doc for a detailed overview of the design structure, implementation, and motivation behind this baseball sim.
 
 example_final_manager_report_bos_2004_ws.txt contains a sample manager simulation output for the Boston Red Sox 2004 World Series lineup.  This output contains detailed information directed at the manager of the team for maximizing runs scored per game through lineup optimization.  Player data was obtained from bos_2004_ws_g2.csv.
