@@ -16,6 +16,6 @@ Command line calling sequence:
 
 (B) `python sim.py 'David Ortiz' bos_2004_ws_g2.csv 20 final_player_report.txt`
 
-When running these commands on the zoo, I had it take about 30 seconds to run.
+It took about 30 seconds to run the above commands on the zoo.
 
 See github repo to learn more: https://github.com/kevjiang/baseball-sim
