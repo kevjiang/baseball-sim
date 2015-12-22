@@ -1,32 +1,5 @@
-'''
-Time For 1 million game runs
-7.216486
-
-real    3m29.357s
-'''
-
 from player import Player
 from helpers import weighted_choice
-
-events = {
-    "single": 1,
-    "double": 2,
-    "triple": 3,
-    "home_run": 4,
-    "walk": 5,
-    "strikeout": 6,
-    "bbo": 7
-}
-
-events2 = {
-    1: "single",
-    2: "double",
-    3: "triple",
-    4: "home_run",
-    5: "walk",
-    6: "strikeout",
-    7: "bbo"
-}
 
 
 class Game(object):
