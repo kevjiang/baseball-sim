@@ -1,32 +1,16 @@
+See kjiang_project_proposal.doc for a detailed overview of the design structure, implementation, and motivation behind this baseball sim.  
 
+example_final_manager_report_bos_2004_ws.txt contains a sample manager simulation output for the Boston Red Sox 2004 World Series lineup.  This output contains detailed information directed at the manager of the team for maximizing runs scored per game through lineup optimization.  Player data was obtained from bos_2004_ws_g2.csv.
 
+example_final_player_report_bos_2004_ws.txt contains a sample player simulation output for David Ortiz in the context of the eight other players in the Boston Red Sox 2004 World Series lineup.  This output contains detailed information directed at David Ortiz (a player on the Red Sox) for maximizing his RBIs produced through lineup optimization.  Player data was obtained from bos_2004_ws_g2.csv.
 
-Calling sequence:
-python sim.py [player_name] input_file [num_rotations|trials_per_pos] output_file
-Ex 1) python sim.py bos_2004_ws_g2.csv 20 final_manager_report.txt
-Ex 2) python sim.py 'David Ortiz' bos_2004_ws_g2.csv 20 final_player_report.txt
+The above two outputs represent a rather large simulation sample size.  Each simulation processed 16,200 seasons, which is equivalent to 2,624,400 games, 23,619,600 innings, or about 99,202,320 player plate appearances.  Processing these simulations, recording individual player statistics etc. requires quite a bit of processing power, and as such, it is probably infeasible for you to run the program with this many seasons.  Thus, I have provided 2 calling sequences, (A) to generate a manager report in final_manager_report.txt and (B) to generate a player report in final_player_report.txt that simulates 180 seasons each-- as such, it should take a significantly shorter amount of time.  (-) represents the general calling sequence.  Note that the number of seasons actually simulated will be [num_rotations|trials_per_pos] * 9.  
 
-# baseball-sim
-RBI vs. salary: https://ai.arizona.edu/sites/ai/files/MIS580/baseball.pdf
+Command line calling sequence:
+(-) python sim.py [player_name] input_file num_rotations|trials_per_pos output_file
+(A) python sim.py bos_2004_ws_g2.csv 20 final_manager_report.txt
+(B) python sim.py 'David Ortiz' bos_2004_ws_g2.csv 20 final_player_report.txt
 
-baseball sim ideas (esp. baserunning probabilities): http://knology.net/johnfjarvis/simulator.html
+When running these commands on the zoo, I had it take about 30 seconds to run.
 
-another baserunning table: https://books.google.com/books?id=E_NCXcE6J2EC&pg=PA104&lpg=PA104&dq=baseball+simulator+runner+advancement+player+speed&source=bl&ots=EnLF5Qa-Sx&sig=6ua4q9jLGwwODIfOyPtNyS8Pblw&hl=en&sa=X&ved=0CB0Q6AEwAGoVChMIk9Lq9fb0yAIVQn-QCh3yqQiX#v=onepage&q=baseball%20simulator%20runner%20advancement%20player%20speed&f=false
-
-Markov Model Explanation: http://www.pankin.com/markov/btn1191.htm
-
-To do
-3) Baserunning based on real player data
-4) Steal potential.
-5) Error potential.  
-6) Sacrifce potential.  
-7) Baserunner movement on bbo potential
-8) Add pitchers to the mix
-9) Figure out why runs are about 1 run/game too high!  (or maybe it's valid?)
-
-maybe not to do
-a) maybe add lineup class? but probably not
-b) Maybe make a new Innings class to represent an inning
-
-Time:
-1000 162 game season simulations: 3min 40 s = 220s
+See github repo to learn more: https://github.com/kevjiang/baseball-sim
