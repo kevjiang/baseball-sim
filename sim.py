@@ -1,18 +1,14 @@
-from game import Game
 from helpers import csv_to_lineup
 from season import Season
-from itertools import permutations
 from copy import deepcopy
 from random import shuffle
-from math import ceil
 import sys
 import heapq
 
 
-
 # simulate season for every permutation of lineup and rank lineups
 # from most runs/game to least runs/game
-def sim_and_rank_seasons(lineup, num_rotations=100):
+def sim_and_rank_seasons(lineup, num_rotations=2):
     ordered_seasons = []  # stores seasons in descending order by runs/game
     counter = 0
 
@@ -23,40 +19,21 @@ def sim_and_rank_seasons(lineup, num_rotations=100):
         shuffle(lineup_copy)
 
         # test all 9 possible orders of given rotation
-        for _ in range(9):
+        for i in range(9):
             lineup_copy.append(lineup_copy.pop(0))  # place first batter at end
             s = Season(lineup=deepcopy(list(lineup_copy)), num_games=162)
             s.play_season()
             ordered_seasons.append(s)
 
+            #print to terminal so people don't freak out waiting for simulations to end
+            sys.stdout.write("\rSeasons Simulated: %d/%d" % (i+counter*9+1, num_rotations*9))
+            sys.stdout.flush()
+
         counter += 1
 
     ordered_seasons.sort(key=lambda s: s.get_runs_per_game())
 
-    # calculate average difference
-    # best_run_total = 0
-    # worst_run_total = 0
-    # best_seasons = [ordered_seasons[-1], ordered_seasons[-2], ordered_seasons[-3], ordered_seasons[-4], ordered_seasons[-5]]
-    # worst_seasons = [ordered_seasons[0], ordered_seasons[1], ordered_seasons[2], ordered_seasons[3], ordered_seasons[4]]
-    # num_iter = 3
-
-    # for seas in best_seasons:
-    #     i = 0
-    #     while i < num_iter:
-    #         s = Season(lineup=deepcopy(list(seas.get_lineup())), num_games=162)
-    #         s.play_season()
-    #         best_run_total += s.get_runs_per_game()
-    #         i += 1
-
-    # for seas in worst_seasons:
-    #     i = 0
-    #     while i < num_iter:
-    #         s = Season(lineup=deepcopy(list(seas.get_lineup())), num_games=162)
-    #         s.play_season()
-    #         worst_run_total += s.get_runs_per_game()
-    #         i += 1
-
-    # average_difference = (best_run_total - worst_run_total) / (num_iter*5)
+    sys.stdout.write("\n")
 
     return ordered_seasons
 
@@ -112,8 +89,8 @@ def ordered_seasons_expl(ordered_seasons):
 
 
 #create file with explanation of best lineup
-def explain_to_file(sample_best_seasons, runs_matrix, name_to_index, num_seasons):
-    fp = open('example_final_manager_report_bos_2004_ws.txt', 'w')
+def explain_to_file(sample_best_seasons, runs_matrix, name_to_index, num_seasons, output_file):
+    fp = open(output_file, 'w')
     fp.write("Manager Report: Optimal Lineups\n\n")
     fp.write("To the Manager:\n\n")
     fp.write("\tAs you know, in the sport of baseball, you must make a decision on how to order the nine hitters in a lineup.  Much has been written and researched about this topic throughout the past century.  You likely have heard a lot of \"conventional lineup wisdom\" which suggests various rules of thumb, such as placing the fastest hitter as the leadoff man (1st), the best power hitter as the cleanup hitter (4th), or the highest average hitter in the 3rd spot.\n\n")
@@ -180,12 +157,12 @@ def explain_to_file(sample_best_seasons, runs_matrix, name_to_index, num_seasons
 
 
 #complete function call sequence to create and write to file for best lineup explanation
-def best_lineup_complete(lineup, num_rotations=100):
+def best_lineup_complete(lineup, num_rotations=2, output_file="final_manager_report.txt"):
     ordered_seasons = sim_and_rank_seasons(lineup, num_rotations)
-
     (sample_best_seasons, runs_matrix, name_to_index) = ordered_seasons_expl(ordered_seasons)
-
-    explain_to_file(sample_best_seasons, runs_matrix, name_to_index, len(ordered_seasons))
+    explain_to_file(sample_best_seasons, runs_matrix, name_to_index, len(ordered_seasons), output_file)
+    sys.stdout.write("%s %s\n" % ("Simulations complete.  Find full manager report in file:", output_file))
+    return
 
 
 # returns array indexed by lineup position of ordered seasons from worst to best
@@ -215,8 +192,9 @@ def rbi_sim_and_rank_seasons(lineup, trials_per_pos=2, name="David Oritz"):
     lineup_copy.pop(this_player_index)
 
     # test player at 1-9 spots of lineup
+    counter = 0
     for lineup_pos in range(9):
-        for _ in range(trials_per_pos):
+        for i in range(trials_per_pos):
             shuffle(lineup_copy)  # randomize lineup
             lineup_copy.insert(lineup_pos, this_player)  # insert this player in appropriate spot
 
@@ -229,7 +207,15 @@ def rbi_sim_and_rank_seasons(lineup, trials_per_pos=2, name="David Oritz"):
                     del lineup_copy[i]
                     break
 
+            #print to terminal so people don't freak out waiting for simulations to end
+            sys.stdout.write("\rSeasons Simulated: %d/%d" % (counter+1, trials_per_pos*9))
+            sys.stdout.flush()
+            counter += 1
+
+    sys.stdout.write("\n")
+
     return ordered_seasons
+
 
 # return list with average RBIs generated at each position
 def rbi_ordered_seasons_expl(lineup, ordered_seasons, name):
@@ -242,7 +228,6 @@ def rbi_ordered_seasons_expl(lineup, ordered_seasons, name):
             if this_player is None:
                 this_player = p
                 break
-
 
     average_rbis_position = []  # average rbi's player has by position
 
@@ -262,69 +247,77 @@ def rbi_ordered_seasons_expl(lineup, ordered_seasons, name):
     return average_rbis_position
 
 
-def rbi_explain_to_file(lineup, name, average_rbis_position, trials_per_pos):
+def rbi_explain_to_file(lineup, name, average_rbis_position, trials_per_pos, output_file):
     master = [(i + 1, elem) for i, elem in enumerate(average_rbis_position)]
     master.sort(key=lambda tup: tup[1])
     ordinal = lambda n: "%d%s" % (n, "tsnrhtdd"[(n/10 % 10 != 1) * (n % 10 < 4) * n % 10::4])
 
-    fp = open('rbis_final_report.txt', 'w')
-    fp.write("Player Report: Maximizing RBIs for %s\n\n" % (name))
-    fp.write("TLDR: Ask (i.e. demand!) to bat in the %s spot in the lineup for maximal RBI production next season.\n\n" % (ordinal(master[-1][0])))
+    # fp = open('final_player_report.txt', 'w')
+    fp = open(output_file, 'w')
+    fp.write("%s %s\n\n" % ("Player Report: Maximizing RBIs for", name))
 
-    fp.write("Best:      %d, Average RBIs: %.1f\n" % (master[-1][0], master[-1][1]))
-    fp.write("Excellent: %d, Average RBIs: %.1f\n" % (master[-2][0], master[-2][1]))
-    fp.write("Great:     %d, Average RBIs: %.1f\n" % (master[-3][0], master[-3][1]))
-    fp.write("Good:      %d, Average RBIs: %.1f\n" % (master[-4][0], master[-4][1]))
-    fp.write("Passable:  %d, Average RBIs: %.1f\n" % (master[-5][0], master[-5][1]))
-    fp.write("Poor:      %d, Average RBIs: %.1f\n" % (master[-6][0], master[-6][1]))
-    fp.write("Bad:       %d, Average RBIs: %.1f\n" % (master[-7][0], master[-7][1]))
-    fp.write("Horrible:  %d, Average RBIs: %.1f\n" % (master[-8][0], master[-8][1]))
-    fp.write("Worst:     %d, Average RBIs: %.1f\n\n" % (master[-9][0], master[-9][1]))
+    fp.write("\t%s\n\n" % ("As you know, where you bat in the order matters.  \"Conventional wisdom\" suggests that hitting near the top of the lineup signals that you are an integral part of the lineup and that your manager respects your hitting abilities; hitting near the bottom of the lineup is a sign that you may soon be riding the bench.  Perhaps you have it in your head that you are a powerful cleanup hitter and thus must always bat fourth.  Perhaps your identity as a top-of-the-order speedster makes you demand to bat first in the order.  "))
+    fp.write("\t%s\n\n" % ('However, if your goal is to win the Triple Crown, that is finish with the (1) highest batting average, (2) number of home runs, and (3) number of RBIs in the league, then you should pick a batting lineup position that maximizes your RBI count (average and home runs is decided by your skill level alone unfortunately, so no amount of batting position tweaks can help you in that cause).  This elusive title is only reached about once every two decades-- why not maximize your chances?'))
+    fp.write("\t%s\n\n" % ('Perhaps your ambitions are not to win the Triple Crown.  But, if you are looking to make the most money in your baseball career, your preferences for batting order position should be simple; simply put, you should want to bat in the position that nets you the highest number of RBIs as well!  RBIs (if someone other than a baseball aficionado is reading this report) is the number of runs batted in for a given hitter; that is, the number of runs that scored directly as a result of your at bats.  The only way to guarantee an RBI is to hit a homerun and thus score yourself-- otherwise, RBIs depend entirely on the actions of the players who hit before you.  In other words, RBIs are almost entirely dependent on your position in the lineup!  Research has shown time and time again that RBI production correlates strongly with salary earnings-- a study done by the University of Arizona showed that salary and RBI production correlated with an r value of +.737.  Although admittedly correlation does not imply causation, since we can severely alter the number of RBIs a player produces in a season by simply changing your spot in the batting order, it does not hurt to try and maximize this statistic--at best, a (perhaps fool-hardy) general manager will pay you a few million dollars more per year due to your inflated RBI total.'))
+    fp.write("\t%s\n\n" % ("Thus, this report's goal will be to pick the batting position in the lineup (1-9) that yields on average the most RBIs in our simulations given your talent level based on previous historical batting data."))
+    fp.write("\t%s\n\n" % ('To calculate the best batting position for you given the eight players that will be batting with you, this report will use a Monte Carlo simulation to run through full 162-game seasons of baseball using a baseball simulation engine. Since managers often will swap around player batting orders during a season, we will generate random assortments of lineups for each batting position we place you in-- then we will calculate the average number of RBIs you produce each season you bat in that position of the lineup.  '))
+    fp.write("\t%s%d%s\n\n" % ('The following includes the results from ',  trials_per_pos*9, ' Monte Carlo simulations.'))
 
-    fp.write("blah blah blah, explain lineup simulations and salary to RBIs correlation; %d simulations\n\n" % (trials_per_pos*9))
+    fp.write("\tBest:      %d, Average RBIs: %.1f\n" % (master[-1][0], master[-1][1]))
+    fp.write("\tExcellent: %d, Average RBIs: %.1f\n" % (master[-2][0], master[-2][1]))
+    fp.write("\tGreat:     %d, Average RBIs: %.1f\n" % (master[-3][0], master[-3][1]))
+    fp.write("\tGood:      %d, Average RBIs: %.1f\n" % (master[-4][0], master[-4][1]))
+    fp.write("\tPassable:  %d, Average RBIs: %.1f\n" % (master[-5][0], master[-5][1]))
+    fp.write("\tPoor:      %d, Average RBIs: %.1f\n" % (master[-6][0], master[-6][1]))
+    fp.write("\tBad:       %d, Average RBIs: %.1f\n" % (master[-7][0], master[-7][1]))
+    fp.write("\tHorrible:  %d, Average RBIs: %.1f\n" % (master[-8][0], master[-8][1]))
+    fp.write("\tWorst:     %d, Average RBIs: %.1f\n\n" % (master[-9][0], master[-9][1]))
 
+    fp.write("\tThus, ask (i.e. demand!) your manager to bat in the %s spot in the lineup for maximal RBI production next season.  Whether your goals are to maximize your chance for the Triple Crown or simply maximize the money you earn on your next contract, this is an easy way to ensure that you are not being cheated by your lineup position!\n\n" % (ordinal(master[-1][0])))
+    fp.write("\t%s\n\n" % ("A final caveat: it is important to note that, due to the high variance of the sport of baseball and the nature of Monte Carlo simulations, subsequent reports generated by our baseball engine may produce slightly different results.  It is important to run an adequately high number of simulations (we suggest >1000 total different seasons) for a more complete report."))
+
+    fp.write("\n\tSincerely,\n\n\tKevin Jiang, Automated Decision Systems \"Expert\"\n")
     fp.close()
     return
 
 
-def maximize_rbi_complete(lineup, trials_per_pos=2, name="David Oritz"):
+def maximize_rbi_complete(lineup, trials_per_pos=2, name="David Oritz", output_file="final_player_report.txt"):
     ordered_seasons = rbi_sim_and_rank_seasons(lineup, trials_per_pos, name)
     average_rbis_position = rbi_ordered_seasons_expl(lineup, ordered_seasons, name)
-    rbi_explain_to_file(lineup, name, average_rbis_position, trials_per_pos)
+    rbi_explain_to_file(lineup, name, average_rbis_position, trials_per_pos, output_file)
+    sys.stdout.write("%s %s\n" % ("Simulations complete.  Find full player report in file:", output_file))
     return
 
 
 def main():
-    for arg in sys.argv:
-        print arg
+    # python sim.py [player_name if player] input_file num_rotations/trials_per_pos output_file
+    # python sim.py bos_2004_ws_g2.csv 20 final_manager_report.txt
+    # python sim.py 'David Ortiz' bos_2004_ws_g2.csv 20 final_player_report.txt
+    if len(sys.argv) == 4:  # means file a manager report
+        input_file = sys.argv[1]
+        num_rotations = int(sys.argv[2])
+        output_file = sys.argv[3]
 
-    # lineup = csv_to_lineup('bos_2004_ws_g2.csv')
-    lineup = csv_to_lineup('bos_2004_ws_g2.csv')
-    print "***And the lineup is...***"
-    lineup_pos = 1
-    for elem in lineup:
-        lineup_string = "%d: " + str(elem) + ", " + str(elem.get_attr_obj().get_attr_dic())
-        print lineup_string % (lineup_pos)
-        lineup_pos += 1
-    print "**************************"
+        lineup = csv_to_lineup(input_file)
 
-    # num_sim = 162
-    # total_score = 0
+        best_lineup_complete(lineup, num_rotations=num_rotations, output_file=output_file)
 
-    # for _ in range(num_sim):
-    #     g = Game(live_update=True, game_summary=True, lineup=lineup)
-    #     g.play_ball()
-    #     total_score += g.get_score()
+    elif len(sys.argv) == 5:
+        player_name = sys.argv[1]
+        input_file = sys.argv[2]
+        trials_per_pos = int(sys.argv[3])
+        output_file = sys.argv[4]
 
-    # print total_score/float(num_sim)
+        lineup = csv_to_lineup(input_file)
 
-    # s = Season(lineup=lineup)
-    # s.play_season()
-    # s.print_season_summary()
-    # print "Runs per game: " + str(s.get_runs_per_game())
+        maximize_rbi_complete(lineup, trials_per_pos=trials_per_pos, name=player_name, output_file=output_file)
 
-    best_lineup_complete(lineup, num_rotations=20)
-    # maximize_rbi_complete(lineup, trials_per_pos=2, name="David Ortiz")
+    else:
+        print "Command Line Argument Error, See ReadMe for Correct Calling Sequences"
+        print len(sys.argv)
+        exit(0)
+
+    return
 
 
 if __name__ == "__main__":

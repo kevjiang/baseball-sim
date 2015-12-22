@@ -1,3 +1,11 @@
+
+
+
+Calling sequence:
+python sim.py [player_name] input_file [num_rotations|trials_per_pos] output_file
+Ex 1) python sim.py bos_2004_ws_g2.csv 20 final_manager_report.txt
+Ex 2) python sim.py 'David Ortiz' bos_2004_ws_g2.csv 20 final_player_report.txt
+
 # baseball-sim
 RBI vs. salary: https://ai.arizona.edu/sites/ai/files/MIS580/baseball.pdf
 
