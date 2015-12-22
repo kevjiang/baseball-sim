@@ -1,0 +1,113 @@
+Manager Report: Optimal Lineups
+
+To the Manager:
+
+	As you know, in the sport of baseball, you must make a decision on how to order the nine hitters in a lineup.  Much has been written and researched about this topic throughout the past century.  You likely have heard a lot of "conventional lineup wisdom" which suggests various rules of thumb, such as placing the fastest hitter as the leadoff man (1st), the best power hitter as the cleanup hitter (4th), or the highest average hitter in the 3rd spot.
+
+	The bad news is that the "conventional lineup wisdom" of old is based largely on "gut feelings", which do not necessarily result in winning lineup combinations.  While conventional wisdom may be smart to follow loosely, it is perhaps easy to see that monolithic advice such as "place the highest average hitter in the 3rd spot" without considering other variables such as the composition of the rest of the lineup is a sub-optimal lineup-building approach.  The good news is that you, as the manager, need not follow outdated, data-blind rules when setting your lineup-- instead, by following the lineup suggestions in this report, you can construct a lineup to be as close to optimal as possible.
+
+	I am well aware that the batting order is not constructed in a vacuum-- that is, you as a manager have player egos to manage and as such will be "forced" through external, social factors to bat certain players at certain positions.  This is why this report offers, in addition to the five most optimal lineup combinations, a detailed analysis of which positions a player should bat to optimize lineup performance.  Thus, you as a manager will be able to make an informed decision balancing the various pressures of managing a clubhouse with constructing a lineup that offers the maximum number of runs per game.
+
+	Our data driven approach will simulate full 162-game seasons of baseball using a baseball simulation engine.  Seasons will be simulated using different permutations of a 9-person batting lineup, and the runs/game from each season will be recorded, processed, and evaluated to find 1) optimal batting positions for each player and 2) the top 5 optimal lineups.  Player historical statistics will be used as an input as an estimate of future performance-- that is, our report generates optimal lineup data assuming that players will play to their previously statistical ability.  However, if you suspect a player's abilities have significantly deviated from their historical performance, it would be easy to add these new observations by altering the statistical data contained in the input csv files to our simulation engine (or ask your resident computer/data science professional to change these values for you).
+
+	If you are short on time, below are 5 of the optimal lineups based on maximizing runs/game that appeared in our simulations.  In addition to runs/game data, we have also included the statistical output of each player during that season, which should give you a sense of how each player fared in our simulated season.  This data is included because the variance in baseball, even in a 162-game season, can be admittedly high-- thus, if you notice that a player over-performed or under-performed in the season in question, you can adjust your lineup evaluations accordingly.  Regardless, using one of these lineup combinations in real MLB games should allow for a relatively optimal performance.
+
+	Note: This report was generated using 16200 Monte Carlo simulations of 162-game seasons.
+
+	TLDR: pick one of these lineups for your optimal lineup combination:
+
+Lineup 1                    	AVG   	HR    	RBI   	OBP   	SLG   	AB    	H     	R     	BB    	SO    
+1) Johnny Damon             	0.332 	14    	149   	0.403 	0.474 	777   	258   	186   	92    	94    
+2) Manny Ramirez            	0.315 	61    	223   	0.421 	0.641 	724   	228   	261   	133   	139   
+3) Bill Mueller             	0.309 	26    	174   	0.405 	0.507 	726   	224   	194   	117   	99    
+4) Mark Bellhorn            	0.291 	25    	162   	0.413 	0.490 	683   	199   	200   	142   	226   
+5) Jason Varitek            	0.294 	20    	139   	0.412 	0.463 	670   	197   	187   	135   	185   
+6) Trot Nixon               	0.346 	27    	142   	0.414 	0.559 	706   	244   	183   	82    	127   
+7) Orlando Cabrera          	0.295 	22    	155   	0.335 	0.490 	723   	213   	139   	44    	82    
+8) David Ortiz              	0.316 	45    	154   	0.393 	0.603 	665   	210   	182   	85    	142   
+9) Kevin Millar             	0.325 	38    	134   	0.408 	0.570 	644   	209   	177   	91    	115   
+Runs per game: 8.840 
+
+Lineup 2                    	AVG   	HR    	RBI   	OBP   	SLG   	AB    	H     	R     	BB    	SO    
+1) Orlando Cabrera          	0.302 	19    	170   	0.351 	0.483 	804   	243   	178   	61    	85    
+2) Bill Mueller             	0.265 	25    	133   	0.359 	0.436 	739   	196   	191   	108   	115   
+3) David Ortiz              	0.304 	62    	231   	0.388 	0.653 	727   	221   	259   	100   	159   
+4) Jason Varitek            	0.334 	30    	152   	0.439 	0.547 	686   	229   	222   	128   	162   
+5) Johnny Damon             	0.321 	24    	161   	0.405 	0.499 	698   	224   	175   	98    	82    
+6) Kevin Millar             	0.295 	22    	132   	0.388 	0.461 	679   	200   	174   	104   	135   
+7) Mark Bellhorn            	0.286 	25    	121   	0.392 	0.492 	653   	187   	162   	114   	219   
+8) Manny Ramirez            	0.324 	68    	187   	0.423 	0.715 	635   	206   	217   	109   	140   
+9) Trot Nixon               	0.329 	34    	145   	0.410 	0.560 	638   	210   	162   	87    	105   
+Runs per game: 8.840 
+
+Lineup 3                    	AVG   	HR    	RBI   	OBP   	SLG   	AB    	H     	R     	BB    	SO    
+1) Orlando Cabrera          	0.327 	30    	216   	0.363 	0.545 	828   	271   	200   	46    	83    
+2) Mark Bellhorn            	0.306 	23    	171   	0.427 	0.500 	706   	216   	222   	149   	234   
+3) Manny Ramirez            	0.324 	58    	228   	0.420 	0.656 	720   	233   	263   	119   	142   
+4) Johnny Damon             	0.318 	35    	172   	0.394 	0.529 	732   	233   	209   	92    	86    
+5) David Ortiz              	0.313 	39    	160   	0.416 	0.588 	691   	216   	204   	122   	158   
+6) Kevin Millar             	0.317 	14    	128   	0.403 	0.457 	691   	219   	142   	99    	116   
+7) Bill Mueller             	0.288 	13    	101   	0.382 	0.438 	673   	194   	130   	102   	104   
+8) Jason Varitek            	0.298 	29    	121   	0.405 	0.502 	641   	191   	164   	115   	169   
+9) Trot Nixon               	0.348 	22    	130   	0.410 	0.526 	661   	230   	155   	69    	101   
+Runs per game: 8.809 
+
+Lineup 4                    	AVG   	HR    	RBI   	OBP   	SLG   	AB    	H     	R     	BB    	SO    
+1) David Ortiz              	0.287 	51    	224   	0.375 	0.581 	770   	221   	234   	108   	168   
+2) Kevin Millar             	0.321 	34    	167   	0.415 	0.530 	739   	237   	206   	119   	146   
+3) Mark Bellhorn            	0.271 	30    	179   	0.387 	0.492 	705   	191   	202   	134   	230   
+4) Jason Varitek            	0.320 	25    	143   	0.426 	0.512 	688   	220   	190   	127   	203   
+5) Orlando Cabrera          	0.322 	16    	141   	0.349 	0.490 	769   	248   	165   	31    	87    
+6) Trot Nixon               	0.331 	40    	152   	0.399 	0.573 	703   	233   	185   	79    	107   
+7) Johnny Damon             	0.332 	22    	101   	0.404 	0.507 	684   	227   	158   	83    	78    
+8) Bill Mueller             	0.314 	30    	142   	0.395 	0.531 	663   	208   	165   	89    	96    
+9) Manny Ramirez            	0.341 	64    	172   	0.447 	0.723 	618   	211   	230   	118   	131   
+Runs per game: 8.772 
+
+Lineup 5                    	AVG   	HR    	RBI   	OBP   	SLG   	AB    	H     	R     	BB    	SO    
+1) Orlando Cabrera          	0.306 	30    	177   	0.341 	0.505 	834   	255   	189   	44    	78    
+2) David Ortiz              	0.326 	63    	216   	0.414 	0.660 	746   	243   	256   	113   	165   
+3) Kevin Millar             	0.324 	29    	144   	0.399 	0.511 	748   	242   	203   	94    	120   
+4) Bill Mueller             	0.306 	23    	162   	0.395 	0.504 	718   	220   	189   	105   	100   
+5) Jason Varitek            	0.294 	25    	144   	0.400 	0.476 	681   	200   	182   	120   	188   
+6) Trot Nixon               	0.348 	32    	147   	0.424 	0.578 	692   	241   	181   	91    	116   
+7) Mark Bellhorn            	0.275 	34    	129   	0.391 	0.491 	643   	177   	183   	122   	209   
+8) Manny Ramirez            	0.323 	46    	144   	0.435 	0.629 	628   	203   	192   	124   	143   
+9) Johnny Damon             	0.328 	29    	147   	0.404 	0.541 	649   	213   	145   	83    	67    
+Runs per game: 8.704 
+
+
+	If you are willing to dig deeper into the data, this report also provides a more holistic evaluation of player viability at different positions. Below is a table that displays the average runs per game of a lineup containing a given player at a given batting position (i.e. the average number of runs per game generated when player X batted in the ith spot in the lineup).  
+
+	Using this table provided, you will be able to judge how many runs per game an average lineup with a particular player at a particular position will produce.  Each player has batting positions that result in lineups that produce more runs; likewise, every player has batting positions that result in lineups that produce fewer runs.  The key for you as a manager is to place as many players in their "optimal" batting positions as possible, in order to produce an optimally performing lineup.  However, it is also important to note that this data is based on an "average" lineup-- thus, you should also refer to the 5 optimal lineups for a good idea of optimal orderings in which to place your players, and balance the two pieces of information in addition to other external, social pressures accordingly.
+
+Table of Runs Per Game Based on Player Batting Order Positions
+Player                      	Pos 1 	Pos 2 	Pos 3 	Pos 4 	Pos 5 	Pos 6 	Pos 7 	Pos 8 	Pos 9 
+Johnny Damon                	7.549 	7.566 	7.551 	7.568 	7.579 	7.553 	7.568 	7.559 	7.550 	
+Manny Ramirez               	7.583 	7.585 	7.577 	7.558 	7.556 	7.555 	7.562 	7.536 	7.532 	
+Bill Mueller                	7.555 	7.550 	7.551 	7.558 	7.552 	7.569 	7.568 	7.564 	7.576 	
+Mark Bellhorn               	7.569 	7.557 	7.569 	7.550 	7.559 	7.570 	7.556 	7.557 	7.557 	
+Jason Varitek               	7.580 	7.588 	7.560 	7.569 	7.571 	7.543 	7.534 	7.555 	7.545 	
+Trot Nixon                  	7.563 	7.557 	7.556 	7.574 	7.569 	7.555 	7.559 	7.546 	7.565 	
+Orlando Cabrera             	7.516 	7.506 	7.538 	7.546 	7.564 	7.578 	7.586 	7.602 	7.608 	
+David Ortiz                 	7.570 	7.560 	7.575 	7.557 	7.543 	7.551 	7.560 	7.565 	7.562 	
+Kevin Millar                	7.559 	7.575 	7.566 	7.563 	7.550 	7.570 	7.552 	7.559 	7.548 	
+
+	Finally, in lieu of the "conventional lineup wisdom" of old, this report has generated a data driven lineup cheat sheet, which will provide the top 3 lineup positions for each player based on these Monte Carlo simulations.  Note that it may not be possible to place all players in their "best" position (since one player's optimal position in a lineup could feasibly be the same as another player's optimal position in a lineup).  However, you should try your best to place a player in one of their three most optimal batting positions.
+
+Lineup Wisdom Cheat Sheet
+Johnny Damon                	Best: 5	Better: 4	Good: 7
+Manny Ramirez               	Best: 2	Better: 1	Good: 3
+Bill Mueller                	Best: 9	Better: 6	Good: 7
+Mark Bellhorn               	Best: 6	Better: 1	Good: 3
+Jason Varitek               	Best: 2	Better: 1	Good: 5
+Trot Nixon                  	Best: 4	Better: 5	Good: 9
+Orlando Cabrera             	Best: 9	Better: 8	Good: 7
+David Ortiz                 	Best: 3	Better: 1	Good: 8
+Kevin Millar                	Best: 2	Better: 6	Good: 3
+
+	A caveat: it is important to note that, due to the high variance of the sport of baseball and the nature of Monte Carlo simulations, subsequent reports generated by our baseball engine may produce slightly different results.  It is important to run an adequately high number of simulations (we suggest >1000 total different seasons as a starting point, but really the more simulations run the more accurate the data will be) for a more complete report.  If you suspect that some of the optimal lineups were flukes, that's ok!  In fact, that's why this report includes five optimal lineups in addition to the statistics of each player in those lineups-- due diligence on your part as a manager should be able to weed out any aggregiously anamolous player performances using the data provided in this report. 
+
+	Sincerely,
+
+	Kevin Jiang, Automated Decision System "Expert"
