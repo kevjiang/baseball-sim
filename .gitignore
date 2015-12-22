@@ -1,4 +1,4 @@
-ompiled source #
+# Compiled source #
 ###################
 *.com
 *.class
@@ -39,5 +39,4 @@ Thumbs.db
 # Custom files #
 ################
 *.pyc
-*.csv
 *.txt
